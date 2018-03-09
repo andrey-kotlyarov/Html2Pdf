@@ -31,11 +31,8 @@ namespace Html2Pdf.HParser
 
             //System.Console.Write(text);
             tokenization();
-
-            
-
-            //throw new HException("File " + fileFullName + " not found.");
         }
+        
 
         private void tokenization()
         {
@@ -49,17 +46,21 @@ namespace Html2Pdf.HParser
 
             int pos = 0;
             HToken tokenPrev = null;
+            bool validToken;
 
             HToken token = null;
 
             while (text.Length > 0)
             {
+                validToken = false;
                 mText = reText.Match(text);
 
                 if (mText.Success)
                 {
                     token = new HTokenText(pos, mText.Value);
                     text = reText.Replace(text, "");
+
+                    validToken = true;
                 }
                 else
                 {
@@ -69,28 +70,33 @@ namespace Html2Pdf.HParser
                     {
                         token = new HTokenTag(pos, mTag.Value);
                         text = reTag.Replace(text, "");
+
+                        validToken = ((token as HTokenTag).TagType != HTagType._unknown);
                     }
                     else
                     {
                         throw new HException("No valid HTML file.");
                     }
                 }
-                
-                token.PrevToken = tokenPrev;
-                if (tokenPrev != null)
+
+                if (validToken)
                 {
-                    tokenPrev.NextToken = token;
+                    token.SetPrevToken(tokenPrev);
+
+                    if (tokenPrev != null)
+                    {
+                        tokenPrev.SetNextToken(token);
+                    }
+
+                    tokens.Add(token);
+
+                    tokenPrev = token;
+                    pos++;
                 }
-                
-                tokens.Add(token);
-                
-                tokenPrev = token;
-                pos++;
             }
-            
+
             return;
         }
-
 
         public override string ToString()
         {

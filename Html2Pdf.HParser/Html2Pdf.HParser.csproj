@@ -43,6 +43,7 @@
     <Compile Include="HAttribute.cs" />
     <Compile Include="HDocument.cs" />
     <Compile Include="HException.cs" />
+    <Compile Include="HNode.cs" />
     <Compile Include="HStyle.cs" />
     <Compile Include="HStyleType.cs" />
     <Compile Include="HTagType.cs" />

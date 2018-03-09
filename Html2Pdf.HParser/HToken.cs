@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 
 namespace Html2Pdf.HParser
 {
-    abstract public class HToken
+    public abstract class HToken
     {
         public int Pos { get; protected set; }
         public string Src { get; protected set; }
-        public HToken PrevToken { get; set; }
-        public HToken NextToken { get; set; }
+        public HToken PrevToken { get; private set; }
+        public HToken NextToken { get; private set; }
+
+
+        public HNode Node { get; private set; }
+        public bool NodeWasCollected { get; private set; }
+
 
 
         public HToken(int pos, string src)
@@ -22,6 +27,19 @@ namespace Html2Pdf.HParser
 
             PrevToken = null;
             NextToken = null;
+
+            Node = null;
+            NodeWasCollected = false;
+        }
+
+        public void SetPrevToken(HToken token)
+        {
+            PrevToken = token;
+        }
+
+        public void SetNextToken(HToken token)
+        {
+            NextToken = token;
         }
 
 

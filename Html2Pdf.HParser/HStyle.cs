@@ -10,6 +10,16 @@ namespace Html2Pdf.HParser
     public struct HStyle
     {
         public HStyleType styleType;
-        public string val;
+        public string styleValue;
+
+        public override string ToString()
+        {
+            string desc = "[Style]";
+
+            desc += " name: '" + HUtil.GetStyleNameByStyleEnum(styleType) + "'";
+            desc += "; value: '" + styleValue + "'";
+
+            return desc;
+        }
     }
 }

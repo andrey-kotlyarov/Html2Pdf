@@ -21,8 +21,8 @@ namespace Html2Pdf.Console
 
             if (args.Length == 0)
             {
-                //htmlFile = GetDataDir() + "test01.html";
-                htmlFile = GetDataDir() + "test02.html";
+                htmlFile = GetDataDir() + "test01.html";
+                //htmlFile = GetDataDir() + "test02.html";
             }
 
             if (args.Length > 0)
