@@ -12,7 +12,7 @@ namespace Html2Pdf.HParser
     {
         private IEnumerable<HNode> childNodes;
 
-        public List<HNode> ChildNodes { get => childNodes as List<HNode>; set => childNodes = value; }
+        public List<HNode> ChildNodes { get => childNodes as List<HNode>; }
 
 
         public HNodeContainer(HTagType tagType, IEnumerable<HAttribute> attributes, IEnumerable<HStyle> styles) : base(tagType, attributes, styles)
@@ -21,6 +21,11 @@ namespace Html2Pdf.HParser
         }
 
 
+        public void SetChildNodes(IEnumerable<HNode> childNodes)
+        {
+            this.childNodes = childNodes;
+        }
+        /*
         public void AppendChildNode(HNode node)
         {
             (childNodes as List<HNode>).Add(node);
@@ -29,6 +34,7 @@ namespace Html2Pdf.HParser
         {
             (childNodes as List<HNode>).Insert(0, node);
         }
+        */
 
     }
 }

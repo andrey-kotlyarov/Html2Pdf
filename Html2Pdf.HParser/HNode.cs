@@ -28,7 +28,7 @@ namespace Html2Pdf.HParser
 
         public override string ToString()
         {
-            string desc = "[Node " + this.GetType().Name + "] ";
+            string desc = "[HNode " + this.GetType().Name + "] ";
 
             return desc;
         }

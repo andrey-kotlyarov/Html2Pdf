@@ -32,9 +32,7 @@ namespace Html2Pdf.HParser
             public static IEnumerable<T> EnumToList<T>()
             {
                 Type enumType = typeof(T);
-
-                // Can't use generic type constraints on value types,
-                // so have to do check like this
+                
                 if (enumType.BaseType != typeof(Enum)) throw new ArgumentException("T must be of type System.Enum");
 
                 Array enumValArray = Enum.GetValues(enumType);

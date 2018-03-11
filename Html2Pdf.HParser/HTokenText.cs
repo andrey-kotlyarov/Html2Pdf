@@ -16,10 +16,10 @@ namespace Html2Pdf.HParser
 
         protected override void createNode()
         {
-            this.node = new HNodeText(this.Src);
+            node = new HNodeText(Src);
 
-            this.nodeWasCollected = false;
-            this.nodeReadyToCollect = true;
+            nodeWasCollected = false;
+            nodeReadyToCollect = true;
         }
     }
 }

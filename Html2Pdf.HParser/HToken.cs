@@ -9,14 +9,19 @@ namespace Html2Pdf.HParser
 {
     public abstract class HToken
     {
-        public int Pos { get; protected set; }
-        public string Src { get; protected set; }
-        public HToken PrevToken { get; private set; }
-        public HToken NextToken { get; private set; }
+        private int pos;
+        private string src;
+        private HToken prevToken;
+        private HToken nextToken;
 
+        public int Pos { get => pos; }
+        public string Src { get => src; }
+        public HToken PrevToken { get => prevToken; }
+        public HToken NextToken { get => nextToken; }
 
+        
         protected HNode node;
-        public HNode Node { get => node;/* private set;*/ }
+        public HNode Node { get => node; }
 
 
 
@@ -28,33 +33,32 @@ namespace Html2Pdf.HParser
         protected bool nodeReadyToCollect;
         public bool NodeReadyToCollect { get => nodeReadyToCollect; }
 
-        /*
-        private bool childNodesWereCollected;
-        public bool ChildNodesWereCollected { get => childNodesWereCollected; }
-        */
+        
+
 
         public HToken(int pos, string src)
         {
-            Pos = pos;
-            Src = src;
+            this.pos = pos;
+            this.src = src;
 
-            PrevToken = null;
-            NextToken = null;
+            prevToken = null;
+            nextToken = null;
 
             node = null;
             nodeWasCollected = false;
+            nodeReadyToCollect = false;
         }
 
         protected abstract void createNode();
 
         public void SetPrevToken(HToken token)
         {
-            PrevToken = token;
+            prevToken = token;
         }
 
         public void SetNextToken(HToken token)
         {
-            NextToken = token;
+            nextToken = token;
         }
 
         public void CollectNode()
@@ -71,9 +75,9 @@ namespace Html2Pdf.HParser
 
         public override string ToString()
         {
-            string desc = "[Token " + this.GetType().Name + "] ";
+            string desc = "[HToken " + this.GetType().Name + "] ";
 
-            desc += "pos: " + Pos;
+            desc += "- pos: " + Pos;
             desc += ", prev: " + (PrevToken == null ? "[nil]" : "" + PrevToken.Pos);
             desc += ", next: " + (NextToken == null ? "[nil]" : "" + NextToken.Pos);
             desc += ", src: '" + Src + "'";

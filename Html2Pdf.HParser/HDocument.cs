@@ -25,19 +25,11 @@ namespace Html2Pdf.HParser
             text = System.IO.File.ReadAllText(fileFullName, Encoding.Default);
 
             // Document in one line
-            /*
-            text = text.Replace("\r\n", " ");
-            text = text.Replace("\n\r", " ");
-            text = text.Replace("\n", " ").Replace("\r", " ");
-            */
             text = HUtil.StringUtil.ToSingleLine(text);
 
             // Remove all comments
-            //Regex re = new Regex("<!--.*?-->");
             text = HUtil.StringUtil.Re_TokenComment.Replace(text, "");
-
-
-            //System.Console.Write(text);
+            
             tokenization();
             nodenization();
         }
@@ -46,9 +38,7 @@ namespace Html2Pdf.HParser
         private void tokenization()
         {
             tokens = new List<HToken>();
-            //Regex reText = new Regex("^[^<>]+");
-            //Regex reTag = new Regex("^<[^<>]+>");
-
+            
             Match mText = null;
             Match mTag = null;
 
@@ -67,7 +57,6 @@ namespace Html2Pdf.HParser
                 if (mText.Success)
                 {
                     token = new HTokenText(pos, mText.Value);
-                    //text = reText.Replace(text, "");
                     text = HUtil.StringUtil.Re_TokenFirstText.Replace(text, "");
 
                     validToken = true;
@@ -79,14 +68,13 @@ namespace Html2Pdf.HParser
                     if (mTag.Success)
                     {
                         token = new HTokenTag(pos, mTag.Value);
-                        //text = reTag.Replace(text, "");
                         text = HUtil.StringUtil.Re_TokenFirstTag.Replace(text, "");
 
                         validToken = ((token as HTokenTag).TagType != HTagType._unknown);
                     }
                     else
                     {
-                        throw new HException("No valid HTML file. (1)");
+                        throw new HException("HTML document is not valid. (1)");
                     }
                 }
 
@@ -110,95 +98,7 @@ namespace Html2Pdf.HParser
         }
 
 
-        /*
-        private void nodenization()
-        {
-            rootNode = null;
-
-            while (true)
-            {
-
-                HTagType currentTagType = HTagType._unknown;
-                HTokenTag currentOpenToken = null;
-                HTokenTag currentCloseToken = null;
-                List<HNode> childNodes = new List<HNode>();
-
-                foreach (HToken token in tokens)
-                {
-                    if ((token is HTokenTag) && (token as HTokenTag).IsClose && !(token as HTokenTag).IsOpen && !token.NodeWasCollected)
-                    {
-                        currentCloseToken = (token as HTokenTag);
-                        currentTagType = currentCloseToken.TagType;
-                        break;
-                    }
-                }
-
-
-                if (currentCloseToken != null)
-                {
-                    currentCloseToken.CollectNode();
-
-                    HToken prevToken = null;
-
-                    do
-                    {
-                        prevToken = (prevToken != null ? prevToken.PrevToken : currentCloseToken.PrevToken);
-                        if (prevToken == null) throw new HException("No valid HTML file. (2)");
-
-                        if (prevToken.NodeWasCollected)
-                        {
-                            if (prevToken.Node != null)
-                            {
-                                childNodes.Add(prevToken.Node);
-                            }
-                        }
-                        else if ((prevToken is HTokenTag) && (prevToken as HTokenTag).IsOpen && !(prevToken as HTokenTag).IsClose && !prevToken.NodeWasCollected && (prevToken as HTokenTag).TagType == currentTagType)
-                        {
-                            currentOpenToken = (prevToken as HTokenTag);
-
-                            if (currentOpenToken.Node != null && (currentOpenToken.Node is HNodeElement))
-                            {
-                                (currentOpenToken.Node as HNodeElement).ChildNodes = childNodes;
-                            }
-                            currentOpenToken.CollectNode();
-
-                        }
-                        else
-                        {
-                            throw new HException("No valid HTML file. (3)");
-                        }
-
-                    }
-                    while (currentOpenToken != null);
-
-
-
-                    //rootNode = xxx;
-                }
-                else
-                {
-                    break;
-                }
-
-
-
-
-
-
-
-                
-
-
-
-
-
-            }
-            //TODO
-        }
-        */
-
-
-
+        
         private void nodenization()
         {
             rootNode = null;
@@ -233,7 +133,7 @@ namespace Html2Pdf.HParser
                     do
                     {
                         prevToken = (prevToken != null ? prevToken.PrevToken : currentCloseToken.PrevToken);
-                        if (prevToken == null) throw new HException("No valid HTML file. (2)");
+                        if (prevToken == null) throw new HException("HTML document is not valid. (2)");
 
 
 
@@ -242,7 +142,7 @@ namespace Html2Pdf.HParser
                             currentOpenToken = (prevToken as HTokenTag);
                             if (currentOpenToken.Node != null && (currentOpenToken.Node is HNodeElement))
                             {
-                                (currentOpenToken.Node as HNodeElement).ChildNodes = childNodes;
+                                (currentOpenToken.Node as HNodeContainer).SetChildNodes(childNodes);
                             }
 
                             currentOpenToken.ReadyToCollectNode();
@@ -251,18 +151,17 @@ namespace Html2Pdf.HParser
                         {
                             if (prevToken.Node != null)
                             {
-                                //childNodes.Add(prevToken.Node);
                                 childNodes.Insert(0, prevToken.Node);
                             }
                             prevToken.CollectNode();
                         }
                         else if (prevToken.NodeWasCollected)
                         {
-
+                            // Not doing anything
                         }
                         else
                         {
-                            throw new HException("No valid HTML file. (3)");
+                            throw new HException("HTML document is not valid. (3)");
                         }
 
                         
@@ -291,7 +190,9 @@ namespace Html2Pdf.HParser
 
         public override string ToString()
         {
-            string desc = "HDocument (tokens):";
+            string desc = "[HDocument]";
+
+            desc += "\r\n\r\nTOKEN LIST:";
 
             foreach (HToken token in tokens)
             {

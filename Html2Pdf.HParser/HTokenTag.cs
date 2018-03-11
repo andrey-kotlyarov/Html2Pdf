@@ -62,16 +62,10 @@ namespace Html2Pdf.HParser
 
         private void parse()
         {
-            //Regex reClose = new Regex(@"</([^\s]+)\s*>");
-            //Regex reOpen = new Regex(@"<([^\s]+)\s?(.+)?>");
-            //Regex reOpenAndClose = new Regex(@"<([^\s]+)\s?(.+)?/>");
-
             bool success = false;
-
-
+            
             if (!success)
             {
-                //Match mClose = reClose.Match(Src);
                 Match mClose = HUtil.StringUtil.Re_TokenTagClose.Match(Src);
 
                 if (mClose.Success)
@@ -88,7 +82,6 @@ namespace Html2Pdf.HParser
 
             if (!success)
             {
-                //Match mOpen = reOpen.Match(Src);
                 Match mOpen = HUtil.StringUtil.Re_TokenTagOpen.Match(Src);
                 
                 if (mOpen.Success)
@@ -105,7 +98,6 @@ namespace Html2Pdf.HParser
 
             if (!success)
             {
-                //Match mOpenAndClose = reOpenAndClose.Match(Src);
                 Match mOpenAndClose = HUtil.StringUtil.Re_TokenTagSole.Match(Src);
 
                 if (mOpenAndClose.Success)
@@ -132,8 +124,6 @@ namespace Html2Pdf.HParser
         {
             attributes = new List<HAttribute>();
 
-            //Regex re = new Regex(@"\s*([^\s]+)\s*=\s*\""([^\""]+)\""\s*");
-            //MatchCollection matches = re.Matches(attributesStr);
             MatchCollection matches = HUtil.StringUtil.Re_TagAttributes.Matches(attributesStr);
 
             foreach (Match m in matches)
@@ -143,7 +133,6 @@ namespace Html2Pdf.HParser
                     HAttribute attr = new HAttribute()
                     {
                         key = m.Groups[1].Value,
-                        //val = m.Groups[2].Value
                         val = HUtil.StringUtil.HtmlAmpersandSequenceDecode(m.Groups[2].Value)
                     };
 
@@ -162,8 +151,6 @@ namespace Html2Pdf.HParser
         {
             styles = new List<HStyle>();
 
-            //Regex re = new Regex(@"\s*([^\s]+)\s*\:\s*([^\s]+?)\s*(;|$)");
-            //MatchCollection matches = re.Matches(stylesStr);
             MatchCollection matches = HUtil.StringUtil.Re_TagStyles.Matches(stylesStr);
 
             foreach (Match m in matches)
@@ -196,25 +183,25 @@ namespace Html2Pdf.HParser
             {
                 if (IsClose)
                 {
-                    this.node = new HNodeSole(tagType, attributes, styles);
+                    node = new HNodeSole(tagType, attributes, styles);
 
-                    this.nodeWasCollected = false;
-                    this.nodeReadyToCollect = true;
+                    nodeWasCollected = false;
+                    nodeReadyToCollect = true;
                 }
                 else
                 {
-                    this.node = new HNodeElement(tagType, attributes, styles);
+                    node = new HNodeElement(tagType, attributes, styles);
 
-                    this.nodeWasCollected = false;
-                    this.nodeReadyToCollect = false;
+                    nodeWasCollected = false;
+                    nodeReadyToCollect = false;
                 }
             }
             else
             {
-                this.node = null;
+                node = null;
 
-                this.nodeWasCollected = false;
-                this.nodeReadyToCollect = false;
+                nodeWasCollected = false;
+                nodeReadyToCollect = false;
             }
         }
 

@@ -51,6 +51,11 @@ namespace Html2Pdf.HParser
                 decodeText = decodeText.Replace("&gt;", ">");
                 //TODO
 
+
+                Regex reSpaces = new Regex(@"\s{2,}");
+                decodeText = reSpaces.Replace(decodeText, " ");
+
+
                 return decodeText;
             }
 

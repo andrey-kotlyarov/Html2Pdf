@@ -14,7 +14,7 @@ namespace Html2Pdf.HParser
 
         public override string ToString()
         {
-            string desc = "[Style]";
+            string desc = "[HStyle]";
 
             desc += " - name: '" + HUtil.EnumUtil.GetStyleNameByStyleEnum(styleType) + "'";
             desc += " - value: '" + styleValue + "'";
