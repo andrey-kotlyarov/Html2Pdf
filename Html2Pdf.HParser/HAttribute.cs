@@ -15,10 +15,10 @@ namespace Html2Pdf.HParser
 
         public override string ToString()
         {
-            string desc = " [Attribute] ";
+            string desc = "[Attribute]";
 
-            desc += "key: '" + key + "'";
-            desc += "; val: '" + val + "'";
+            desc += " - key: '" + key + "'";
+            desc += " - val: '" + val + "'";
 
             return desc;
         }

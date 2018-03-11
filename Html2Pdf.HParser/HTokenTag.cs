@@ -10,8 +10,13 @@ namespace Html2Pdf.HParser
 {
     public class HTokenTag : HToken
     {
-        public bool IsOpen { get; protected set; }
-        public bool IsClose { get; protected set; }
+
+        private bool isOpen;
+        private bool isClose;
+       
+
+        public bool IsOpen { get => isOpen; }
+        public bool IsClose { get => isClose; }
 
 
 
@@ -23,12 +28,12 @@ namespace Html2Pdf.HParser
         private HTagType tagType;
         public HTagType TagType { get => tagType; private set => tagType = value; }
 
-        private List<HAttribute> attributes;
-        public List<HAttribute> Attributes { get => attributes; }
+        private IEnumerable<HAttribute> attributes;
+        public List<HAttribute> Attributes { get => attributes as List<HAttribute>; }
 
         
-        private List<HStyle> styles;
-        public List<HStyle> Styles { get => styles; }
+        private IEnumerable<HStyle> styles;
+        public List<HStyle> Styles { get => styles as List<HStyle>; }
 
 
         
@@ -36,9 +41,8 @@ namespace Html2Pdf.HParser
 
         public HTokenTag(int pos, string src) : base(pos, src)
         {
-            // TODO
-            IsOpen = false;
-            IsClose = false;
+            isOpen = false;
+            isClose = false;
 
             tagName = "";
             attributesStr = "";
@@ -51,27 +55,31 @@ namespace Html2Pdf.HParser
             parse();
             parseAttributes();
             parseStyles();
+
+            createNode();
         }
 
 
         private void parse()
         {
-            Regex reClose = new Regex(@"</([^\s]+)\s*>");
-            Regex reOpen = new Regex(@"<([^\s]+)\s?(.+)?>");
-            Regex reOpenAndClose = new Regex(@"<([^\s]+)\s?(.+)?/>");
+            //Regex reClose = new Regex(@"</([^\s]+)\s*>");
+            //Regex reOpen = new Regex(@"<([^\s]+)\s?(.+)?>");
+            //Regex reOpenAndClose = new Regex(@"<([^\s]+)\s?(.+)?/>");
 
             bool success = false;
 
 
             if (!success)
             {
-                Match mClose = reClose.Match(Src);
+                //Match mClose = reClose.Match(Src);
+                Match mClose = HUtil.StringUtil.Re_TokenTagClose.Match(Src);
+
                 if (mClose.Success)
                 {
-                    IsOpen = false;
-                    IsClose = true;
+                    isOpen = false;
+                    isClose = true;
                     tagName = mClose.Groups[1].Value;
-                    tagType = HUtil.GetTagTypeByTagName(tagName);
+                    tagType = HUtil.EnumUtil.GetTagTypeByTagName(tagName);
                     attributesStr = "";
 
                     success = true;
@@ -80,13 +88,15 @@ namespace Html2Pdf.HParser
 
             if (!success)
             {
-                Match mOpen = reOpen.Match(Src);
+                //Match mOpen = reOpen.Match(Src);
+                Match mOpen = HUtil.StringUtil.Re_TokenTagOpen.Match(Src);
+                
                 if (mOpen.Success)
                 {
-                    IsOpen = true;
-                    IsClose = false;
+                    isOpen = true;
+                    isClose = false;
                     tagName = mOpen.Groups[1].Value;
-                    tagType = HUtil.GetTagTypeByTagName(tagName);
+                    tagType = HUtil.EnumUtil.GetTagTypeByTagName(tagName);
                     attributesStr = mOpen.Groups[2].Value;
 
                     success = true;
@@ -95,13 +105,15 @@ namespace Html2Pdf.HParser
 
             if (!success)
             {
-                Match mOpenAndClose = reOpenAndClose.Match(Src);
+                //Match mOpenAndClose = reOpenAndClose.Match(Src);
+                Match mOpenAndClose = HUtil.StringUtil.Re_TokenTagSole.Match(Src);
+
                 if (mOpenAndClose.Success)
                 {
-                    IsOpen = true;
-                    IsClose = true;
+                    isOpen = true;
+                    isClose = true;
                     tagName = mOpenAndClose.Groups[1].Value;
-                    tagType = HUtil.GetTagTypeByTagName(tagName);
+                    tagType = HUtil.EnumUtil.GetTagTypeByTagName(tagName);
                     attributesStr = mOpenAndClose.Groups[2].Value;
 
                     success = true;
@@ -110,28 +122,33 @@ namespace Html2Pdf.HParser
 
             if (!success) throw new HException("Incorrect tag format");
 
-            if (IsOpen && !HUtil.NeedEndTag(tagType))
+            if (IsOpen && !HUtil.TagUtil.NeedEndTag(tagType))
             {
-                IsClose = true;
+                isClose = true;
             }
         }
 
         private void parseAttributes()
         {
             attributes = new List<HAttribute>();
-            
-            Regex re = new Regex(@"\s*([^\s]+)\s*=\s*\""([^\""]+)\""\s*");
-            MatchCollection matches = re.Matches(attributesStr);
+
+            //Regex re = new Regex(@"\s*([^\s]+)\s*=\s*\""([^\""]+)\""\s*");
+            //MatchCollection matches = re.Matches(attributesStr);
+            MatchCollection matches = HUtil.StringUtil.Re_TagAttributes.Matches(attributesStr);
 
             foreach (Match m in matches)
             {
                 if (m.Success)
                 {
-                    HAttribute attr = new HAttribute();
-                    attr.key = m.Groups[1].Value;
-                    attr.val = m.Groups[2].Value;
+                    HAttribute attr = new HAttribute()
+                    {
+                        key = m.Groups[1].Value,
+                        //val = m.Groups[2].Value
+                        val = HUtil.StringUtil.HtmlAmpersandSequenceDecode(m.Groups[2].Value)
+                    };
 
-                    attributes.Add(attr);
+
+                    (attributes as List<HAttribute>).Add(attr);
 
                     if (attr.key.ToLower() == "style")
                     {
@@ -145,30 +162,61 @@ namespace Html2Pdf.HParser
         {
             styles = new List<HStyle>();
 
-            Regex re = new Regex(@"\s*([^\s]+)\s*\:\s*([^\s]+?)\s*(;|$)");
-            MatchCollection matches = re.Matches(stylesStr);
+            //Regex re = new Regex(@"\s*([^\s]+)\s*\:\s*([^\s]+?)\s*(;|$)");
+            //MatchCollection matches = re.Matches(stylesStr);
+            MatchCollection matches = HUtil.StringUtil.Re_TagStyles.Matches(stylesStr);
 
             foreach (Match m in matches)
             {
                 if (m.Success)
                 {
                     string styleName = m.Groups[1].Value;
-                    string val = m.Groups[2].Value;
+                    string value = m.Groups[2].Value;
 
-                    HStyleType styleType = HUtil.GetStyleTypeByStyleName(styleName);
+                    HStyleType styleType = HUtil.EnumUtil.GetStyleTypeByStyleName(styleName);
 
                     if (styleType != HStyleType._unknown)
                     {
-                        HStyle style = new HStyle();
-                        style.styleType = styleType;
-                        style.styleValue = val;
+                        HStyle style = new HStyle()
+                        {
+                            styleType = styleType,
+                            styleValue = value
+                        };
 
-                        styles.Add(style);
+                        (styles as List<HStyle>).Add(style);
                     }
                 }
             }
         }
 
+
+        protected override void createNode()
+        {
+            if (IsOpen)
+            {
+                if (IsClose)
+                {
+                    this.node = new HNodeSole(tagType, attributes, styles);
+
+                    this.nodeWasCollected = false;
+                    this.nodeReadyToCollect = true;
+                }
+                else
+                {
+                    this.node = new HNodeElement(tagType, attributes, styles);
+
+                    this.nodeWasCollected = false;
+                    this.nodeReadyToCollect = false;
+                }
+            }
+            else
+            {
+                this.node = null;
+
+                this.nodeWasCollected = false;
+                this.nodeReadyToCollect = false;
+            }
+        }
 
         public override string ToString()
         {
@@ -199,5 +247,7 @@ namespace Html2Pdf.HParser
 
             return desc;
         }
+
+        
     }
 }

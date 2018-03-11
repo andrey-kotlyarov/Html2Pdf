@@ -16,8 +16,8 @@ namespace Html2Pdf.HParser
         {
             string desc = "[Style]";
 
-            desc += " name: '" + HUtil.GetStyleNameByStyleEnum(styleType) + "'";
-            desc += "; value: '" + styleValue + "'";
+            desc += " - name: '" + HUtil.EnumUtil.GetStyleNameByStyleEnum(styleType) + "'";
+            desc += " - value: '" + styleValue + "'";
 
             return desc;
         }

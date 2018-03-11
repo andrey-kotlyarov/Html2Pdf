@@ -9,9 +9,17 @@ namespace Html2Pdf.HParser
 {
     public class HTokenText : HToken
     {
-        //public string Text { get; protected set; }
         public HTokenText(int pos, string src) : base(pos, src)
         {
+            createNode();
+        }
+
+        protected override void createNode()
+        {
+            this.node = new HNodeText(this.Src);
+
+            this.nodeWasCollected = false;
+            this.nodeReadyToCollect = true;
         }
     }
 }
