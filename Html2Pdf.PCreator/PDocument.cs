@@ -32,13 +32,18 @@ namespace Html2Pdf.PCreator
 
 
             pdfDocument = new Document();
-            pdfPage = pdfDocument.Pages.Add();
 
 
+            //PExample.Text1(pdfDocument);
+            PExample.Text2(pdfDocument);
+
+            //pdfPage = pdfDocument.Pages.Add();
             //PExample.Graph1(pdfPage);
             //PExample.Graph2(pdfPage);
             //PExample.Graph3(pdfPage);
-            PExample.Graph4(pdfPage);
+            //PExample.Graph4(pdfPage);
+
+
 
 
             pdfDocument.Save(fileFullName);
