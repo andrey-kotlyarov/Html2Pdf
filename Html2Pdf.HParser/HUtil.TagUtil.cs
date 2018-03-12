@@ -11,9 +11,9 @@ namespace Html2Pdf.HParser
     {
         public static class TagUtil
         {
-            public static bool NeedEndTag(HTagType tagEnum)
+            public static bool NeedEndTag(HTagType tagType)
             {
-                switch (tagEnum)
+                switch (tagType)
                 {
                     case HTagType.img:
                     case HTagType.input:
@@ -23,6 +23,55 @@ namespace Html2Pdf.HParser
                         return true;
                 }
             }
+
+
+            //TEMPORARY DEBUG
+            public static bool IsInlineTag(HTagType tagType)
+            {
+                switch (tagType)
+                {
+                    case HTagType.span:
+                    case HTagType.a:
+                    case HTagType.img:
+                    case HTagType.input:
+                    case HTagType.button:
+                        return true;
+                    case HTagType._unknown:
+                    default:
+                        return false;
+                }
+            }
+
+            public static string AttributesToString(HNodeTag node)
+            {
+                string desc = "{Attributes: ";
+
+                foreach (HAttribute attribute in node.Attributes)
+                {
+                    desc +=  attribute.ToString();
+                    desc += "; ";
+                }
+
+                desc += "}";
+
+                return desc;
+            }
+
+            public static string StylesToString(HNodeTag node)
+            {
+                string desc = "{Styles: ";
+
+                foreach (HStyle style in node.Styles)
+                {
+                    desc += style.ToString();
+                    desc += "; ";
+                }
+
+                desc += "}";
+
+                return desc;
+            }
+
         }
     }
 }

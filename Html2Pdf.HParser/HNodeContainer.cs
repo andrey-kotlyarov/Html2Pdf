@@ -25,6 +25,7 @@ namespace Html2Pdf.HParser
         {
             this.childNodes = childNodes;
         }
+
         /*
         public void AppendChildNode(HNode node)
         {
@@ -35,6 +36,38 @@ namespace Html2Pdf.HParser
             (childNodes as List<HNode>).Insert(0, node);
         }
         */
+
+        public void ClearSpaceChildNodes()
+        {
+            bool nextNodeIsInline = false;
+            
+            for (int i = ChildNodes.Count - 1; i >= 0; i--)
+            {
+                if (ChildNodes[i] is HNodeText && (ChildNodes[i] as HNodeText).Text == " ")
+                {
+                    if (!nextNodeIsInline)
+                    {
+                        (childNodes as List<HNode>).RemoveAt(i);
+                    }
+                }
+                else if (ChildNodes[i] is HNodeContainer)
+                {
+                    (ChildNodes[i] as HNodeContainer).ClearSpaceChildNodes();
+                    if ((ChildNodes[i] is HNodeTag) && HUtil.TagUtil.IsInlineTag((ChildNodes[i] as HNodeTag).TagType))
+                    {
+                        nextNodeIsInline = true;
+                    }
+                    else if (ChildNodes[i] is HNodeText)
+                    {
+                        nextNodeIsInline = true;
+                    }
+                    else
+                    {
+                        nextNodeIsInline = false;
+                    }
+                }
+            }
+        }
 
     }
 }

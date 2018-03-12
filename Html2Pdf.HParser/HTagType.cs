@@ -14,6 +14,7 @@ namespace Html2Pdf.HParser
         _unknown,
         html,
         head,
+        title,
         body,
         p,
         div,

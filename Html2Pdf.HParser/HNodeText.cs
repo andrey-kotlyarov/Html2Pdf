@@ -11,7 +11,7 @@ namespace Html2Pdf.HParser
     public class HNodeText: HNode
     {
         private string text;
-        private string Text { get => text; }
+        public string Text { get => text; }
 
         public HNodeText(string src)
         {
@@ -22,7 +22,7 @@ namespace Html2Pdf.HParser
         {
             string indentStr = new string(' ', indent);
 
-            string desc = indentStr + "[TEXT: " + text + "]";
+            string desc = indentStr + "[TEXT: '" + text + "']";
 
             return desc;
         }

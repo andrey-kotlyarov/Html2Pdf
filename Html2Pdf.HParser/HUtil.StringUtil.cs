@@ -44,16 +44,19 @@ namespace Html2Pdf.HParser
             {
                 string decodeText = text;
 
+                Regex reSpaces = new Regex(@"\s{2,}");
+                decodeText = reSpaces.Replace(decodeText, " ");
+
                 decodeText = decodeText.Replace("&amp;", "&");
                 decodeText = decodeText.Replace("&quot;", "\"");
                 decodeText = decodeText.Replace("&nbsp;", " ");
                 decodeText = decodeText.Replace("&lt;", "<");
                 decodeText = decodeText.Replace("&gt;", ">");
+
                 //TODO
+                // add other Ampersand Sequence
 
 
-                Regex reSpaces = new Regex(@"\s{2,}");
-                decodeText = reSpaces.Replace(decodeText, " ");
 
 
                 return decodeText;

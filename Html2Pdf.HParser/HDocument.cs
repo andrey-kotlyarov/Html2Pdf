@@ -183,9 +183,19 @@ namespace Html2Pdf.HParser
                 {
                     break;
                 }
-
             }
+
+
+            if (rootNode != null && (rootNode is HNodeContainer))
+            {
+                (rootNode as HNodeContainer).ClearSpaceChildNodes();
+            }
+
+
         }
+
+
+
 
 
         public override string ToString()
