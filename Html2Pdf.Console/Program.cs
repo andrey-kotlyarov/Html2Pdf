@@ -23,7 +23,9 @@ namespace Html2Pdf.Console
             {
                 //htmlFile = GetDataDir() + "test01.html";
                 //htmlFile = GetDataDir() + "test02.html";
-                htmlFile = GetDataDir() + "test03.html";
+                //htmlFile = GetDataDir() + "test03.html";
+                //htmlFile = GetDataDir() + "test04.html";
+                htmlFile = GetDataDir() + "test05.html";
             }
 
             if (args.Length > 0)
@@ -50,7 +52,7 @@ namespace Html2Pdf.Console
                 var pDocument = new PDocument(pdfFile, hDocument);
 
                 System.Console.WriteLine("");
-                //System.Console.Write(hDocument);
+                System.Console.Write(hDocument);
             }
             catch (H2PException e)
             {

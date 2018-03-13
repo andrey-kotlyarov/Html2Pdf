@@ -18,6 +18,8 @@ namespace Html2Pdf.HParser
         private HNode rootNode;
         public HNode RootNode { get => rootNode; }
 
+        private HNode bodyNode;
+        public HNode BodyNode { get => bodyNode; }
 
 
         public HDocument(string fileFullName)
@@ -102,6 +104,7 @@ namespace Html2Pdf.HParser
         private void nodenization()
         {
             rootNode = null;
+            bodyNode = null;
 
             while (true)
             {
@@ -176,7 +179,12 @@ namespace Html2Pdf.HParser
                             node.SetParentNode(currentOpenToken.Node);
                         }
 
-                        this.rootNode = currentOpenToken.Node;
+                        rootNode = currentOpenToken.Node;
+
+                        if (bodyNode == null && (currentOpenToken.Node as HNodeTag).TagType == HTagType.body)
+                        {
+                            bodyNode = currentOpenToken.Node;
+                        }
                     }
                 }
                 else
@@ -189,9 +197,12 @@ namespace Html2Pdf.HParser
             if (rootNode != null && (rootNode is HNodeContainer))
             {
                 (rootNode as HNodeContainer).ClearSpaceChildNodes();
+
+                if (bodyNode == null) bodyNode = rootNode;
             }
 
 
+            if (bodyNode == null) throw new HException("HTML document is not valid. (4)");
         }
 
 
@@ -212,8 +223,14 @@ namespace Html2Pdf.HParser
 
             if (rootNode != null)
             {
-                desc += "\r\n\r\nNODE's TREE:\r\n";
+                desc += "\r\n\r\n _ROOT_ NODE's TREE:\r\n";
                 desc += rootNode.ToStringIndent(0);
+            }
+
+            if (bodyNode != null)
+            {
+                desc += "\r\n\r\n _BODY_ NODE's TREE:\r\n";
+                desc += bodyNode.ToStringIndent(0);
             }
 
             return desc;

@@ -20,7 +20,7 @@ namespace Html2Pdf.PCreator
                 defaultTextState.ForegroundColor = Aspose.Pdf.Color.Black;
                 defaultTextState.Font = FontRepository.FindFont("Times");
                 defaultTextState.FontStyle = FontStyles.Regular;
-                defaultTextState.FontSize = 13;
+                defaultTextState.FontSize = 12F;
 
                 defaultTextState.StrikeOut = false;
                 defaultTextState.Underline = false;
@@ -162,31 +162,38 @@ namespace Html2Pdf.PCreator
                     switch (strFontSize.Trim().ToLower())
                     {
                         case "medium":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 12.0F;
                             break;
                         case "xx-small":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 7.0F;
                             break;
                         case "x-small":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 7.5F;
                             break;
                         case "small":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 10.0F;
                             break;
                         case "large":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 13.5F;
                             break;
                         case "x-large":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 18.0F;
                             break;
                         case "xx-large":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 24.0F;
                             break;
                         case "smaller":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 10.0F;
                             break;
                         case "larger":
-                            fontSize = fontSize * 1.00F;
+                            fontSize = 14.0F;
+                            break;
+                        case "initial":
+                            fontSize = TextState_Default().FontSize;
+                            break;
+                        //TODO
+                        case "inherit":
+                            //fontSize = fontSize;
                             break;
                         default:
                             break;
@@ -200,7 +207,13 @@ namespace Html2Pdf.PCreator
 
             public static void SetTextDecoration(TextState textState, string strTextDecoration)
             {
-
+                //textState.TextDecoration_None = (strTextDecoration.ToLower().Contains("none"));
+                textState.Underline = (strTextDecoration.ToLower().Contains("underline"));
+                //textState.TextDecoration_Overline = (strTextDecoration.ToLower().Contains("overline"));
+                textState.StrikeOut = (strTextDecoration.ToLower().Contains("line-through"));
+                //textState.TextDecoration_Blink = (strTextDecoration.ToLower().Contains("blink"));
+                //textState.TextDecoration_Inherit = (strTextDecoration.ToLower().Contains("inherit"));
+                
             }
 
         }

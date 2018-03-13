@@ -71,7 +71,7 @@ namespace Html2Pdf.PCreator
                 //textFragment2.Position = new Position(100, 200);
                 */
 
-                TextSegment textSegment = new TextSegment("Text Segment");
+                TextSegment textSegment = new TextSegment("Text Segment. ");
                 TextState textState = new TextState();
                 textState.ApplyChangesFrom(defaultTextState);
                 textState.ForegroundColor = Aspose.Pdf.Color.Gray;
@@ -82,6 +82,20 @@ namespace Html2Pdf.PCreator
                 textSegment.TextState.ApplyChangesFrom(textState);
                 textFragment.Segments.Add(textSegment);
 
+
+
+
+
+                TextSegment textSegment2 = new TextSegment("Text Segment 2");
+                TextState textState2 = new TextState();
+                textState2.ApplyChangesFrom(defaultTextState);
+                textState2.ForegroundColor = Aspose.Pdf.Color.Green;
+                textState2.FontStyle = FontStyles.Regular;
+                textState2.Underline = false;
+                textState2.FontSize = 18;
+
+                textSegment2.TextState.ApplyChangesFrom(textState2);
+                textFragment.Segments.Add(textSegment2);
 
 
 

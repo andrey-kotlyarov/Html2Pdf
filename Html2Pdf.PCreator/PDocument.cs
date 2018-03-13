@@ -17,9 +17,19 @@ namespace Html2Pdf.PCreator
         private Aspose.Pdf.Document pdfDocument;
         private Aspose.Pdf.Page pdfPage;
 
+        //private HNode rootNode;
+        private HNode bodyNode;
+
+        private TextState bodyTextState;
+
+
 
         public PDocument(string fileFullName, HDocument hDocument)
         {
+            bodyNode = hDocument.BodyNode;
+            bodyTextState = PUtil.TextStateUtil.TextState_FromHStyles((bodyNode as HNodeTag).Styles);
+
+
             //throw new PException("file " + fileFullName + " is busy.");
 
             //debug_helloWorld(fileFullName);
@@ -49,6 +59,11 @@ namespace Html2Pdf.PCreator
 
             pdfDocument.Save(fileFullName);
         }
+
+
+
+
+
 
 
         private void debug_helloWorld(string fileFullName)
