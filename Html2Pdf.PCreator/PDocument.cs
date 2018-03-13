@@ -35,7 +35,8 @@ namespace Html2Pdf.PCreator
 
 
             //PExample.Text1(pdfDocument);
-            PExample.Text2(pdfDocument);
+            //PExample.Text2(pdfDocument);
+            PExample.Text3(pdfDocument);
 
             //pdfPage = pdfDocument.Pages.Add();
             //PExample.Graph1(pdfPage);

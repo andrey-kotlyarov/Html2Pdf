@@ -14,6 +14,103 @@ namespace Html2Pdf.PCreator
     {
 
 
+        public static void Text3(Document pdfDocument)
+        {
+            Page pdfPage = pdfDocument.Pages.Add();
+
+            TextState defaultTextState = new TextState();
+            defaultTextState.ForegroundColor = Aspose.Pdf.Color.Brown;
+            defaultTextState.Font = FontRepository.FindFont("Times");
+            defaultTextState.FontStyle = FontStyles.Regular;
+            defaultTextState.FontSize = 13;
+
+            defaultTextState.StrikeOut = false;
+            defaultTextState.Underline = true;
+            
+
+            pdfPage.PageInfo.Margin = new MarginInfo(0, 0, 0, 12);
+            pdfPage.PageInfo.DefaultTextState = defaultTextState;
+
+            pdfPage.Background = Aspose.Pdf.Color.FromRgb(0.9, 0.9, 0.9);
+
+
+            int pageCount = 1;
+            for (int i = 1; i <= 100; i++)
+            {
+                TextFragment textFragment = new TextFragment("Text Fragment " + i + ".");
+
+                //textFragment.IsFirstParagraphInColumn = true; // one item per page
+                //textFragment.IsInLineParagraph = true;
+                //textFragment.IsInNewPage = true;
+
+                //textFragment.TextState.ForegroundColor = pdfDocument.PageInfo.DefaultTextState.ForegroundColor;
+                //textFragment.Margin = new MarginInfo(12, 0, 6, 12);
+                textFragment.Margin = new MarginInfo(12, 0, 6, 12);
+
+                /*
+                TextFragment textFragment2 = new TextFragment(" Text Fragment (2) " + i + ".");
+                TextState textState = new TextState();
+                textState.ApplyChangesFrom(defaultTextState);
+                textState.ForegroundColor = Aspose.Pdf.Color.Gray;
+                textState.FontStyle = FontStyles.Bold;
+                textState.Underline = false;
+                textState.FontSize = 7;
+                
+                
+                textFragment2.TextState.ApplyChangesFrom(textState);
+                textFragment2.Margin = new MarginInfo(0, 0, 0, 0);
+
+                //Console.WriteLine(textFragment2.BaselinePosition);
+                //Console.WriteLine(textFragment.BaselinePosition);
+                //Console.WriteLine(textFragment2.Rectangle);
+                //Console.WriteLine(textFragment.Rectangle);
+
+
+                textFragment2.IsInLineParagraph = true;
+                //textFragment2.BaselinePosition = new Position(100, 300);
+                //textFragment2.Position = new Position(100, 200);
+                */
+
+                TextSegment textSegment = new TextSegment("Text Segment");
+                TextState textState = new TextState();
+                textState.ApplyChangesFrom(defaultTextState);
+                textState.ForegroundColor = Aspose.Pdf.Color.Gray;
+                textState.FontStyle = FontStyles.Bold;
+                textState.Underline = false;
+                textState.FontSize = 7;
+                
+                textSegment.TextState.ApplyChangesFrom(textState);
+                textFragment.Segments.Add(textSegment);
+
+
+
+
+                pdfPage.Paragraphs.Add(textFragment);
+                //pdfPage.Paragraphs.Add(textFragment2);
+                
+
+                pdfDocument.ProcessParagraphs();
+                if (pdfDocument.Pages.Count > pageCount)
+                {
+                    pageCount = pdfDocument.Pages.Count;
+                    pdfPage = pdfDocument.Pages[pageCount];
+
+                    pdfPage.PageInfo.Margin = new MarginInfo(0, 0, 0, 12);
+                    pdfPage.PageInfo.DefaultTextState = defaultTextState;
+
+                    pdfPage.Background = Aspose.Pdf.Color.FromRgb(0.90, 1.00, 0.90);
+                }
+
+
+                //Console.WriteLine("page num: " + pdfPage.Number);
+                //Console.WriteLine("page count: " + pdfDocument.Pages.Count);
+            }
+
+
+        }
+
+
+
         public static void Text2(Document pdfDocument)
         {
             Page pdfPage = pdfDocument.Pages.Add();
@@ -21,9 +118,6 @@ namespace Html2Pdf.PCreator
             int pos = 0;
             for (int i = 1; i <= 100; i++)
             {
-
-                
-
                 TextParagraph textParagraph = new TextParagraph();
 
                 TextFragment textFragment1 = new TextFragment("Text Fragment (1) " + i + " ");
