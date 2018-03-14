@@ -27,5 +27,20 @@ namespace Html2Pdf.HParser
             this.styles = styles;
         }
 
+        public string GetAttribute(string attrName, string defValue)
+        {
+            string value = defValue;
+
+            foreach (HAttribute attribute in Attributes)
+            {
+                if (attribute.key.ToLower() == attrName.ToLower())
+                {
+                    value = attribute.val;
+                    break;
+                }
+            }
+
+            return value;
+        }
     }
 }

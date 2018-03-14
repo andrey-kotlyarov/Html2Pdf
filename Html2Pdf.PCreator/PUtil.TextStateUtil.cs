@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -29,10 +30,10 @@ namespace Html2Pdf.PCreator
             }
 
 
-            public static TextState TextState_FromHStyles(IEnumerable<HStyle> styles)
+            public static TextState TextState_FromHStyles(IEnumerable<HStyle> styles, TextState parentTextState = null)
             {
                 TextState textState = new TextState();
-                textState.ApplyChangesFrom(TextState_Default());
+                textState.ApplyChangesFrom(parentTextState ?? TextState_Default());
 
                 foreach (HStyle style in styles)
                 {
@@ -112,7 +113,7 @@ namespace Html2Pdf.PCreator
                 Match m = re.Match(strFontSize);
                 if (m.Success)
                 {
-                    float size = (float)Convert.ToDouble(m.Groups[1].Value);
+                    float size = (float)Convert.ToDouble(m.Groups[1].Value, new CultureInfo("en-US"));
 
                     switch (m.Groups[2].Value.Trim().ToLower())
                     {
@@ -121,23 +122,23 @@ namespace Html2Pdf.PCreator
                             break;
                         //TODO
                         case "ex": // Relative to the x-height of the current font (rarely used)
-                            fontSize = fontSize * size;
+                            fontSize = size;
                             break;
                         //TODO
                         case "px": // pixels (1px = 1/96th of 1in)
-                            fontSize = fontSize * size;
+                            fontSize = size;
                             break;
                         //TODO
                         case "cm":
-                            fontSize = fontSize * size;
+                            fontSize = size;
                             break;
                         //TODO
                         case "mm":
-                            fontSize = fontSize * size;
+                            fontSize = size;
                             break;
                         //TODO
                         case "in": // inches (1in = 96px = 2.54cm)
-                            fontSize = fontSize * size;
+                            fontSize = size;
                             break;
                         case "pc": // picas (1pc = 12 pt)
                             fontSize = size * 12F;

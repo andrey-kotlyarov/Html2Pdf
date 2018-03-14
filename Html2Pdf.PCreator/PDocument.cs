@@ -10,26 +10,305 @@ using Aspose.Pdf.Text;
 using Html2Pdf.HParser;
 
 
+
 namespace Html2Pdf.PCreator
 {
     public class PDocument
     {
-        private Aspose.Pdf.Document pdfDocument;
-        private Aspose.Pdf.Page pdfPage;
-
         //private HNode rootNode;
         private HNode bodyNode;
 
-        private TextState bodyTextState;
+        private TextState pageTextState;
+        private MarginInfo pageMargin;
+        private Aspose.Pdf.Color pageBackground;
+
+
+
+        private Aspose.Pdf.Document pdfDocument;
+        private Aspose.Pdf.Page pdfPage;
+
+        private Aspose.Pdf.Text.TextFragment pdfTextFragment;
+        private Aspose.Pdf.Hyperlink pdfHyperlink;
+
+        private int currentPageNum;
+
+        
 
 
 
         public PDocument(string fileFullName, HDocument hDocument)
         {
             bodyNode = hDocument.BodyNode;
-            bodyTextState = PUtil.TextStateUtil.TextState_FromHStyles((bodyNode as HNodeTag).Styles);
+
+            pageTextState = PUtil.TextStateUtil.TextState_FromHStyles((bodyNode as HNodeTag).Styles);
+            pageMargin = new MarginInfo(4, 4, 4, 12);
+            pageBackground = Aspose.Pdf.Color.FromRgb(1.00, 1.00, 1.00);
+
+            pdfDocument = new Document();
+            pdfPage = null;
+            pdfTextFragment = null;
+            pdfHyperlink = null;
+
+            updateCurrentPage();
+            createBody();
+            
+            pdfDocument.Save(fileFullName);
+        }
 
 
+        
+
+        private void updateCurrentPage()
+        {
+            bool emergedNewPage = false;
+
+            pdfDocument.ProcessParagraphs();
+            
+            if (pdfPage == null)
+            {
+                pdfPage = pdfDocument.Pages.Add();
+                emergedNewPage = true;
+            }
+            else if (pdfDocument.Pages.Count > currentPageNum)
+            {
+                pdfPage = pdfDocument.Pages[pdfDocument.Pages.Count];
+                emergedNewPage = true;
+            }
+
+            if (emergedNewPage)
+            {
+                currentPageNum = pdfDocument.Pages.Count;
+
+                pdfPage.PageInfo.DefaultTextState = pageTextState;
+                pdfPage.PageInfo.Margin = pageMargin;
+                pdfPage.Background = pageBackground;
+            }
+        }
+
+        private void createTextFragmentByTagType(HTagType tagType)
+        {
+            if (!HUtil.TagUtil.IsBlockTag(tagType))
+            {
+                pdfTextFragment = null;
+                return;
+            }
+
+            pdfTextFragment = new TextFragment();
+            
+            if (tagType == HTagType.div)
+            {
+                pdfTextFragment.Margin = new MarginInfo(0, 0, 0, 0);
+            }
+            else if (tagType == HTagType.p)
+            {
+                pdfTextFragment.Margin = new MarginInfo(0, 12, 0, 12);
+            }
+            else
+            {
+                pdfTextFragment.Margin = new MarginInfo(0, 0, 0, 0);
+            }
+
+            return;
+        }
+
+        
+
+
+        private void addTextFragmentOnPage()
+        {
+            if (pdfTextFragment != null)
+            {
+                if (pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
+                {
+                    // not adding textFragment
+                }
+                else
+                {
+                    pdfPage.Paragraphs.Add(pdfTextFragment);
+                    updateCurrentPage();
+                }
+                
+                pdfTextFragment = null;
+            }
+        }
+
+
+
+        private void createBody()
+        {
+            foreach (HNode node in (bodyNode as HNodeContainer).ChildNodes)
+            {
+                createNode(node, pageTextState);
+            }
+            
+            /*
+            //debug
+            for (int i = 1; i <= 100; i++)
+            {
+                TextFragment textFragment = new TextFragment("The Fragment " + i + ".");
+                textFragment.Margin = new MarginInfo(12, 0, 6, 12);
+
+                TextSegment textSegment = new TextSegment(" The Segment.");
+                TextState textState = new TextState();
+                textState.ApplyChangesFrom(pageTextState);
+                textState.ForegroundColor = Aspose.Pdf.Color.Gray;
+                textState.FontStyle = FontStyles.Bold;
+                textState.Underline = false;
+                textState.FontSize = 7;
+
+                textSegment.TextState.ApplyChangesFrom(textState);
+                textFragment.Segments.Add(textSegment);
+
+
+
+
+
+                TextSegment textSegment2 = new TextSegment(" The Segment 2.");
+                TextState textState2 = new TextState();
+                textState2.ApplyChangesFrom(pageTextState);
+                textState2.ForegroundColor = Aspose.Pdf.Color.Green;
+                textState2.FontStyle = FontStyles.Regular;
+                textState2.Underline = false;
+                textState2.FontSize = 18;
+
+                textSegment2.TextState.ApplyChangesFrom(textState2);
+                textFragment.Segments.Add(textSegment2);
+
+                pdfPage.Paragraphs.Add(textFragment);
+                updateCurrentPage();
+            }
+            */
+
+        }
+
+        private void createNode(HNode node, TextState parentTextState)
+        {
+            TextState nodeTextState = new TextState();
+            nodeTextState.ApplyChangesFrom(parentTextState);
+
+            if (node is HNodeTag)
+            {
+                nodeTextState = PUtil.TextStateUtil.TextState_FromHStyles((node as HNodeTag).Styles, parentTextState);
+            }
+
+            //
+            //
+            //
+
+            if ((node is HNodeTag) && HUtil.TagUtil.IsBlockTag((node as HNodeTag).TagType))
+            {
+                addTextFragmentOnPage();
+                createTextFragmentByTagType((node as HNodeTag).TagType);
+            }
+            else if (
+                (node is HNodeTag) && HUtil.TagUtil.IsInlineTag((node as HNodeTag).TagType)
+                ||
+                (node is HNodeText)
+            )
+            {
+                if (pdfTextFragment == null)
+                {
+                    createTextFragmentByTagType(HTagType.div);
+                }
+
+
+                TextSegment textSegment = getTextSegment(node, nodeTextState);
+                if (textSegment != null)
+                {
+                    pdfTextFragment.Segments.Add(textSegment);
+                }
+                
+
+            }
+
+
+            //
+            //
+            //
+
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
+            {
+                pdfHyperlink = new Aspose.Pdf.WebHyperlink((node as HNodeTag).GetAttribute("href", "#"));
+            }
+
+            if (node is HNodeContainer)
+            {
+                foreach (HNode childNode in (node as HNodeContainer).ChildNodes)
+                {
+                    createNode(childNode, nodeTextState);
+                }
+            }
+
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
+            {
+                pdfHyperlink = null;
+            }
+
+            //
+            //
+            //
+
+
+            //
+            //
+            //
+
+            
+            if ((node is HNodeTag) && HUtil.TagUtil.IsBlockTag((node as HNodeTag).TagType))
+            {
+                addTextFragmentOnPage();
+            }
+            
+            //
+            //
+            //
+
+        }
+
+        
+        private TextSegment getTextSegment(HNode node, TextState parentTextState)
+        {
+            //TODO
+            //use pdfTextFragment - global - for href setting etc.
+
+
+            TextSegment textSegment = null;
+
+            if (node is HNodeText)
+            {
+                textSegment = new TextSegment();
+                textSegment.TextState = parentTextState;
+                textSegment.Text = (node as HNodeText).Text;
+
+                
+                if (pdfHyperlink != null)
+                {
+                    textSegment.Hyperlink = pdfHyperlink;
+                }
+            }
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
+            {
+                //TODO
+                parentTextState.ForegroundColor = Aspose.Pdf.Color.Blue;
+                parentTextState.Underline = true;
+            }
+            //TODO - other inline tags
+
+
+            return textSegment;
+        }
+
+
+
+
+
+
+
+
+
+
+        public void PDocument_debug(string fileFullName, HDocument hDocument)
+        {
             //throw new PException("file " + fileFullName + " is busy.");
 
             //debug_helloWorld(fileFullName);
@@ -37,7 +316,6 @@ namespace Html2Pdf.PCreator
             //debug_createText(fileFullName);
 
             //debug_createP(fileFullName);
-
 
 
 
@@ -55,16 +333,8 @@ namespace Html2Pdf.PCreator
             //PExample.Graph4(pdfPage);
 
 
-
-
             pdfDocument.Save(fileFullName);
         }
-
-
-
-
-
-
 
         private void debug_helloWorld(string fileFullName)
         {

@@ -41,6 +41,22 @@ namespace Html2Pdf.HParser
                         return false;
                 }
             }
+            //TEMPORARY DEBUG
+            public static bool IsBlockTag(HTagType tagType)
+            {
+                switch (tagType)
+                {
+                    case HTagType.div:
+                    case HTagType.form:
+                    case HTagType.p:
+                        return true;
+                    case HTagType._unknown:
+                    default:
+                        return false;
+                }
+            }
+
+
 
             public static string AttributesToString(HNodeTag node)
             {
