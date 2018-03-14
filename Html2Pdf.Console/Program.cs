@@ -58,10 +58,10 @@ namespace Html2Pdf.Console
             {
                 System.Console.WriteLine("\nH2P Exception! code: " + e.Code + ", message: " + e.Message);
             }
-            //catch (Exception e)
-            //{
-            //    System.Console.WriteLine("\nException! message: " + e.Message);
-            //}
+            catch (Exception e)
+            {
+                System.Console.WriteLine("\nException! message: " + e.Message);
+            }
             
             System.Console.WriteLine("\n\nProgram Finished. Press any key to exit . . .");
             System.Console.ReadKey();

@@ -28,7 +28,7 @@ namespace Html2Pdf.PCreator
         private Aspose.Pdf.Page pdfPage;
 
         private Aspose.Pdf.Text.TextFragment pdfTextFragment;
-        private Aspose.Pdf.Hyperlink pdfHyperlink;
+        private HNodeTag hyperlinkNode;
 
         private int currentPageNum;
 
@@ -39,15 +39,17 @@ namespace Html2Pdf.PCreator
         public PDocument(string fileFullName, HDocument hDocument)
         {
             bodyNode = hDocument.BodyNode;
+            
+            pageTextState = PUtil.TextStateUtil.TextState_Default();
+            PUtil.TextStateUtil.TextState_ModifyFromHStyles((bodyNode as HNodeTag).Styles, pageTextState);
 
-            pageTextState = PUtil.TextStateUtil.TextState_FromHStyles((bodyNode as HNodeTag).Styles);
             pageMargin = new MarginInfo(4, 4, 4, 12);
             pageBackground = Aspose.Pdf.Color.FromRgb(1.00, 1.00, 1.00);
 
             pdfDocument = new Document();
             pdfPage = null;
             pdfTextFragment = null;
-            pdfHyperlink = null;
+            hyperlinkNode = null;
 
             updateCurrentPage();
             createBody();
@@ -188,7 +190,7 @@ namespace Html2Pdf.PCreator
 
             if (node is HNodeTag)
             {
-                nodeTextState = PUtil.TextStateUtil.TextState_FromHStyles((node as HNodeTag).Styles, parentTextState);
+                PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, nodeTextState);
             }
 
             //
@@ -228,7 +230,7 @@ namespace Html2Pdf.PCreator
 
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
-                pdfHyperlink = new Aspose.Pdf.WebHyperlink((node as HNodeTag).GetAttribute("href", "#"));
+                hyperlinkNode = (node as HNodeTag);
             }
 
             if (node is HNodeContainer)
@@ -241,7 +243,7 @@ namespace Html2Pdf.PCreator
 
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
-                pdfHyperlink = null;
+                hyperlinkNode = null;
             }
 
             //
@@ -268,10 +270,6 @@ namespace Html2Pdf.PCreator
         
         private TextSegment getTextSegment(HNode node, TextState parentTextState)
         {
-            //TODO
-            //use pdfTextFragment - global - for href setting etc.
-
-
             TextSegment textSegment = null;
 
             if (node is HNodeText)
@@ -281,16 +279,18 @@ namespace Html2Pdf.PCreator
                 textSegment.Text = (node as HNodeText).Text;
 
                 
-                if (pdfHyperlink != null)
+                if (hyperlinkNode != null)
                 {
+                    Aspose.Pdf.WebHyperlink pdfHyperlink = new WebHyperlink(hyperlinkNode.GetAttribute("href", "#"));
                     textSegment.Hyperlink = pdfHyperlink;
                 }
+                
             }
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
-                //TODO
-                parentTextState.ForegroundColor = Aspose.Pdf.Color.Blue;
-                parentTextState.Underline = true;
+                PUtil.TextStateUtil.TextState_ModifyForHyperlink(parentTextState);
+                PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
+
             }
             //TODO - other inline tags
 
@@ -304,6 +304,11 @@ namespace Html2Pdf.PCreator
 
 
 
+
+
+        //
+        // DEBUG BLOCK
+        //
 
 
 

@@ -29,12 +29,10 @@ namespace Html2Pdf.PCreator
                 return defaultTextState;
             }
 
+            
 
-            public static TextState TextState_FromHStyles(IEnumerable<HStyle> styles, TextState parentTextState = null)
+            public static void TextState_ModifyFromHStyles(IEnumerable<HStyle> styles, TextState textState)
             {
-                TextState textState = new TextState();
-                textState.ApplyChangesFrom(parentTextState ?? TextState_Default());
-
                 foreach (HStyle style in styles)
                 {
                     switch (style.styleType)
@@ -59,8 +57,12 @@ namespace Html2Pdf.PCreator
                             break;
                     }
                 }
+            }
 
-                return textState;
+            public static void TextState_ModifyForHyperlink(TextState textState)
+            {
+                textState.ForegroundColor = Aspose.Pdf.Color.Blue;
+                textState.Underline = true;
             }
 
 
