@@ -162,5 +162,29 @@ namespace Html2Pdf.HParser
             */
         }
 
+
+        public void SetNextAndPrevForChildNodes()
+        {
+            for (int i = 0; i < ChildNodes.Count; i++)
+            {
+                HNode node = ChildNodes[i];
+
+                if (i > 0)
+                {
+                    HNode prevNode = ChildNodes[i - 1];
+                    
+                    prevNode.SetNextNode(node);
+                    node.SetPrevNode(prevNode);
+                }
+
+                if (node is HNodeContainer)
+                {
+                    (node as HNodeContainer).SetNextAndPrevForChildNodes();
+                }
+            }
+        }
+
+
+
     }
 }

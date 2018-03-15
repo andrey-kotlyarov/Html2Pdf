@@ -30,6 +30,7 @@ namespace Html2Pdf.PCreator
         private Aspose.Pdf.Text.TextFragment pdfTextFragment;
         private Aspose.Pdf.Image pdfImage;
         private HNodeTag hyperlinkNode;
+        private MarginInfo imageMargin = null;
 
         private int currentPageNum;
 
@@ -52,6 +53,7 @@ namespace Html2Pdf.PCreator
             pdfTextFragment = null;
             pdfImage = null;
             hyperlinkNode = null;
+            imageMargin = null;
 
             updateCurrentPage();
             createBody();
@@ -147,49 +149,11 @@ namespace Html2Pdf.PCreator
             {
                 createNode(node, pageTextState);
             }
-            
-            /*
-            //debug
-            for (int i = 1; i <= 100; i++)
-            {
-                TextFragment textFragment = new TextFragment("The Fragment " + i + ".");
-                textFragment.Margin = new MarginInfo(12, 0, 6, 12);
-
-                TextSegment textSegment = new TextSegment(" The Segment.");
-                TextState textState = new TextState();
-                textState.ApplyChangesFrom(pageTextState);
-                textState.ForegroundColor = Aspose.Pdf.Color.Gray;
-                textState.FontStyle = FontStyles.Bold;
-                textState.Underline = false;
-                textState.FontSize = 7;
-
-                textSegment.TextState.ApplyChangesFrom(textState);
-                textFragment.Segments.Add(textSegment);
-
-
-
-
-
-                TextSegment textSegment2 = new TextSegment(" The Segment 2.");
-                TextState textState2 = new TextState();
-                textState2.ApplyChangesFrom(pageTextState);
-                textState2.ForegroundColor = Aspose.Pdf.Color.Green;
-                textState2.FontStyle = FontStyles.Regular;
-                textState2.Underline = false;
-                textState2.FontSize = 18;
-
-                textSegment2.TextState.ApplyChangesFrom(textState2);
-                textFragment.Segments.Add(textSegment2);
-
-                pdfPage.Paragraphs.Add(textFragment);
-                updateCurrentPage();
-            }
-            */
-
         }
 
 
-        private double previousImageHeight = -1;
+        
+        
 
         private void createNode(HNode node, TextState parentTextState)
         {
@@ -220,39 +184,53 @@ namespace Html2Pdf.PCreator
 
                 if (pdfImage != null)
                 {
-                    double textFragment_h = pdfTextFragment.Rectangle.Height;
-                    //double image_h_2 = pdfImage.FixHeight / 2;
-                    double image_h = pdfImage.FixHeight;
-                    previousImageHeight = image_h;
+                    double imageHeight = pdfImage.FixHeight;
+                    MarginInfo margin = new MarginInfo(0, 12, 0, 12);
+                    if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
+                    {
+                        
+                    }
+                    else
+                    {
+                        pdfTextFragment.Margin.Top += imageHeight;
+                        margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * imageHeight);
+                    }
+                    
+
+
                     addTextFragmentOnPage(false);
 
                     pdfImage.IsInLineParagraph = true;
-                    //pdfImage.Margin = new MarginInfo(0, 0, 0, -48);
-                    //pdfImage.Margin = new MarginInfo(0, 12, 0, 12);
-                    //pdfImage.Margin = new MarginInfo(0, -24 + textFragment_h, 0, -24 + textFragment_h);
-                    pdfImage.Margin = new MarginInfo(0, -1 * image_h / 2 + textFragment_h, 0, -1 * image_h / 2 + textFragment_h);
+                    pdfImage.Margin = margin;
+                    imageMargin = margin;
+
+
+                    if (hyperlinkNode != null)
+                    {
+                        Aspose.Pdf.WebHyperlink pdfHyperlink = new WebHyperlink(hyperlinkNode.GetAttribute("href", "#"));
+                        pdfImage.Hyperlink = pdfHyperlink;
+                    }
+
                     pdfPage.Paragraphs.Add(pdfImage);
 
                     pdfImage = null;
                 }
                 else if (pdfTextFragment == null)
                 {
-                    //createTextFragmentByTagType(HTagType.div);
-
                     HTagType tagTypeForTextFragment = HTagType.div;
                     bool isInLineParagraphForTextFragment = false;
 
-                    //DEBUG
+                    
                     bool flagPreviousImage = false;
                     
                     if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.img)
                     {
-                        /*
+                        
                         if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
                         {
                             tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
                         }
-                        */
+                        
                         isInLineParagraphForTextFragment = true;
                         flagPreviousImage = true;
                     }
@@ -264,11 +242,13 @@ namespace Html2Pdf.PCreator
                     createTextFragmentByTagType(tagTypeForTextFragment);
                     pdfTextFragment.IsInLineParagraph = isInLineParagraphForTextFragment;
 
-
-                    if (flagPreviousImage && previousImageHeight > 0)
+                    
+                    if (flagPreviousImage && imageMargin != null)
                     {
-                        pdfTextFragment.Margin.Bottom = previousImageHeight;
-                        previousImageHeight = -1;
+                        pdfTextFragment.Margin.Top = -1 * pdfTextFragment.Rectangle.Height - imageMargin.Bottom;
+                        pdfTextFragment.Margin.Bottom = imageMargin.Bottom;
+
+                        imageMargin = null;
                     }
                 }
 
@@ -361,19 +341,12 @@ namespace Html2Pdf.PCreator
             
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.img)
             {
-                pdfImage = getImage(((node as HNodeTag).GetAttribute("src", "")));
-                /*
-                //textSegment = new TextSegment();
-                //textSegment.TextState = parentTextState;
-                //textSegment.Text = "IMAGE HERE";
+                //pdfImage = getImage(((node as HNodeTag).GetAttribute("src", "")));
 
-                addTextFragmentOnPage();
-                //addImageOnPage();
-                Image image = getImage(((node as HNodeTag).GetAttribute("src", "")));
-                image.IsInLineParagraph = true;
-                pdfPage.Paragraphs.Add(image);
-                //updateCurrentPage();
-                */
+                pdfImage = getImage(node as HNodeTag);
+
+
+
             }
             
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.input)
@@ -399,10 +372,9 @@ namespace Html2Pdf.PCreator
 
 
 
-        private Aspose.Pdf.Image getImage(string imageUrl)
+        private Aspose.Pdf.Image getImage(HNodeTag imageNode)
         {
-            /**/
-            //string imageUrl = "https://www.shareicon.net/data/48x48/2016/08/05/806939_document_512x512.png";
+            /*
             int height = 0;
             int width = 0;
 
@@ -422,14 +394,33 @@ namespace Html2Pdf.PCreator
                 }
             }
             //return pdfPage.Resources.Images[pdfPage.Resources.Images.Count];
-            /**/
+            */
 
-            Aspose.Pdf.Image image = new Image();
-            image.File = imageUrl;
+            //pdfImage = getImage(((node as HNodeTag).GetAttribute("src", "")));
 
-            image.FixHeight = height;
-            image.FixWidth = width;
-            
+
+            Aspose.Pdf.Image image = null;
+            string imageUrl = imageNode.GetAttribute("src", "");
+
+            try
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    byte[] imageData = webClient.DownloadData(imageUrl);
+
+                    using (MemoryStream imageStream = new MemoryStream(imageData))
+                    {
+                        System.Drawing.Image img = System.Drawing.Image.FromStream(imageStream);
+
+                        image = new Aspose.Pdf.Image();
+                        image.File = imageUrl;
+
+                        image.FixHeight = img.Height;
+                        image.FixWidth = img.Width;
+                    }
+                }
+            }
+            catch { }
 
             return image;
         }
@@ -439,12 +430,13 @@ namespace Html2Pdf.PCreator
 
 
 
+
+
+
         //
-        // DEBUG BLOCK
+        // DEBUG BLOCK (start)
         //
-
-
-
+        
         public void PDocument_debug(string fileFullName, HDocument hDocument)
         {
             //throw new PException("file " + fileFullName + " is busy.");
@@ -717,6 +709,10 @@ namespace Html2Pdf.PCreator
 
             pdfDocument.Save(fileFullName);
         }
+
+        //
+        // DEBUG BLOCK (end)
+        //
 
     }
 }

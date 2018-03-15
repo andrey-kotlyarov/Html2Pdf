@@ -51,11 +51,31 @@ namespace Html2Pdf.HParser
         {
             string desc = "[HNode " + this.GetType().Name + "] ";
 
-            desc += " - parent: " + (parentNode != null ? parentNode.GetType().Name : "[nil]");
-            desc += " - prev: " + (prevNode != null ? prevNode.GetType().Name : "[nil]");
-            desc += " - next: " + (nextNode != null ? nextNode.GetType().Name : "[nil]");
+            desc += " - parent: " + _nodeDescription(parentNode); // (parentNode != null ? parentNode.GetType().Name : "[nil]");
+            desc += " - prev: " + _nodeDescription(prevNode); // (prevNode != null ? prevNode.GetType().Name : "[nil]");
+            desc += " - next: " + _nodeDescription(nextNode); // (nextNode != null ? nextNode.GetType().Name : "[nil]");
 
             return desc;
+        }
+        private string _nodeDescription(HNode node)
+        {
+            string toString = "";
+
+
+            if (node == null)
+            {
+                toString = "[nil]";
+            }
+            else if (node is HNodeText)
+            {
+                toString = "TEXT";
+            }
+            else if (node is HNodeTag)
+            {
+                toString = (node as HNodeTag).TagType.ToString();
+            }
+
+            return toString;
         }
     }
 }

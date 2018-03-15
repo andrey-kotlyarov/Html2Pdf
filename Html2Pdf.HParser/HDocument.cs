@@ -159,7 +159,7 @@ namespace Html2Pdf.HParser
                                 //
                                 //
                                 //
-
+                                /*
                                 if (childNodes.Count > 1)
                                 {
                                     HNode nextNode = childNodes[1];
@@ -167,7 +167,7 @@ namespace Html2Pdf.HParser
                                     prevToken.Node.SetNextNode(nextNode);
                                     nextNode.SetPrevNode(prevToken.Node);
                                 }
-
+                                */
                                 //
                                 //
                                 //
@@ -213,6 +213,7 @@ namespace Html2Pdf.HParser
             if (rootNode != null && (rootNode is HNodeContainer))
             {
                 (rootNode as HNodeContainer).ClearSpaceChildNodes();
+                (rootNode as HNodeContainer).SetNextAndPrevForChildNodes();
 
                 if (bodyNode == null) bodyNode = rootNode;
             }
