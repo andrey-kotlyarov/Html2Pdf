@@ -155,6 +155,22 @@ namespace Html2Pdf.HParser
                             if (prevToken.Node != null)
                             {
                                 childNodes.Insert(0, prevToken.Node);
+
+                                //
+                                //
+                                //
+
+                                if (childNodes.Count > 1)
+                                {
+                                    HNode nextNode = childNodes[1];
+                                    
+                                    prevToken.Node.SetNextNode(nextNode);
+                                    nextNode.SetPrevNode(prevToken.Node);
+                                }
+
+                                //
+                                //
+                                //
                             }
                             prevToken.CollectNode();
                         }

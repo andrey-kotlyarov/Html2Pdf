@@ -23,6 +23,7 @@ namespace Html2Pdf.HParser
             string indentStr = new string(' ', indent);
 
             string desc = indentStr + "[TEXT: '" + text + "']";
+            desc += "\r\n" + indentStr + this.ToString();
 
             return desc;
         }

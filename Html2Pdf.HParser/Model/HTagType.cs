@@ -19,6 +19,7 @@ namespace Html2Pdf.HParser
         p,
         div,
         span,
+        br,
         //b,
         a,
         img,

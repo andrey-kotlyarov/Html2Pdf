@@ -15,6 +15,7 @@ namespace Html2Pdf.HParser
             {
                 switch (tagType)
                 {
+                    case HTagType.br:
                     case HTagType.img:
                     case HTagType.input:
                     case HTagType._unknown:
@@ -31,6 +32,7 @@ namespace Html2Pdf.HParser
                 switch (tagType)
                 {
                     case HTagType.span:
+                    case HTagType.br:
                     case HTagType.a:
                     case HTagType.img:
                     case HTagType.input:

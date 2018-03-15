@@ -28,6 +28,7 @@ namespace Html2Pdf.PCreator
         private Aspose.Pdf.Page pdfPage;
 
         private Aspose.Pdf.Text.TextFragment pdfTextFragment;
+        private Aspose.Pdf.Image pdfImage;
         private HNodeTag hyperlinkNode;
 
         private int currentPageNum;
@@ -49,6 +50,7 @@ namespace Html2Pdf.PCreator
             pdfDocument = new Document();
             pdfPage = null;
             pdfTextFragment = null;
+            pdfImage = null;
             hyperlinkNode = null;
 
             updateCurrentPage();
@@ -116,7 +118,7 @@ namespace Html2Pdf.PCreator
         
 
 
-        private void addTextFragmentOnPage()
+        private void addTextFragmentOnPage(bool needUpdateCurrentPage = true)
         {
             if (pdfTextFragment != null)
             {
@@ -127,7 +129,10 @@ namespace Html2Pdf.PCreator
                 else
                 {
                     pdfPage.Paragraphs.Add(pdfTextFragment);
-                    updateCurrentPage();
+                    if (needUpdateCurrentPage)
+                    {
+                        updateCurrentPage();
+                    }
                 }
                 
                 pdfTextFragment = null;
@@ -183,6 +188,9 @@ namespace Html2Pdf.PCreator
 
         }
 
+
+        private double previousImageHeight = -1;
+
         private void createNode(HNode node, TextState parentTextState)
         {
             TextState nodeTextState = new TextState();
@@ -208,14 +216,66 @@ namespace Html2Pdf.PCreator
                 (node is HNodeText)
             )
             {
-                if (pdfTextFragment == null)
+                TextSegment textSegment = getTextSegment(node, nodeTextState);
+
+                if (pdfImage != null)
                 {
-                    createTextFragmentByTagType(HTagType.div);
+                    double textFragment_h = pdfTextFragment.Rectangle.Height;
+                    //double image_h_2 = pdfImage.FixHeight / 2;
+                    double image_h = pdfImage.FixHeight;
+                    previousImageHeight = image_h;
+                    addTextFragmentOnPage(false);
+
+                    pdfImage.IsInLineParagraph = true;
+                    //pdfImage.Margin = new MarginInfo(0, 0, 0, -48);
+                    //pdfImage.Margin = new MarginInfo(0, 12, 0, 12);
+                    //pdfImage.Margin = new MarginInfo(0, -24 + textFragment_h, 0, -24 + textFragment_h);
+                    pdfImage.Margin = new MarginInfo(0, -1 * image_h / 2 + textFragment_h, 0, -1 * image_h / 2 + textFragment_h);
+                    pdfPage.Paragraphs.Add(pdfImage);
+
+                    pdfImage = null;
+                }
+                else if (pdfTextFragment == null)
+                {
+                    //createTextFragmentByTagType(HTagType.div);
+
+                    HTagType tagTypeForTextFragment = HTagType.div;
+                    bool isInLineParagraphForTextFragment = false;
+
+                    //DEBUG
+                    bool flagPreviousImage = false;
+                    
+                    if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.img)
+                    {
+                        /*
+                        if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
+                        {
+                            tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
+                        }
+                        */
+                        isInLineParagraphForTextFragment = true;
+                        flagPreviousImage = true;
+                    }
+                    else
+                    {
+                        
+                    }
+
+                    createTextFragmentByTagType(tagTypeForTextFragment);
+                    pdfTextFragment.IsInLineParagraph = isInLineParagraphForTextFragment;
+
+
+                    if (flagPreviousImage && previousImageHeight > 0)
+                    {
+                        pdfTextFragment.Margin.Bottom = previousImageHeight;
+                        previousImageHeight = -1;
+                    }
                 }
 
 
-                TextSegment textSegment = getTextSegment(node, nodeTextState);
-                if (textSegment != null)
+                
+                if (textSegment != null && pdfTextFragment != null)
+                //if (textSegment != null)
                 {
                     pdfTextFragment.Segments.Add(textSegment);
                 }
@@ -260,10 +320,11 @@ namespace Html2Pdf.PCreator
             {
                 addTextFragmentOnPage();
             }
-            
+
             //
             //
             //
+
 
         }
 
@@ -286,11 +347,46 @@ namespace Html2Pdf.PCreator
                 }
                 
             }
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.br)
+            {
+                textSegment = new TextSegment();
+                //textSegment.TextState = parentTextState;
+                textSegment.Text = Environment.NewLine;
+            }
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
                 PUtil.TextStateUtil.TextState_ModifyForHyperlink(parentTextState);
                 PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
+            }
+            
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.img)
+            {
+                pdfImage = getImage(((node as HNodeTag).GetAttribute("src", "")));
+                /*
+                //textSegment = new TextSegment();
+                //textSegment.TextState = parentTextState;
+                //textSegment.Text = "IMAGE HERE";
 
+                addTextFragmentOnPage();
+                //addImageOnPage();
+                Image image = getImage(((node as HNodeTag).GetAttribute("src", "")));
+                image.IsInLineParagraph = true;
+                pdfPage.Paragraphs.Add(image);
+                //updateCurrentPage();
+                */
+            }
+            
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.input)
+            {
+                textSegment = new TextSegment();
+                textSegment.TextState = parentTextState;
+                textSegment.Text = "INPUT HERE";
+            }
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.button)
+            {
+                textSegment = new TextSegment();
+                textSegment.TextState = parentTextState;
+                textSegment.Text = "BUTTON HERE";
             }
             //TODO - other inline tags
 
@@ -300,6 +396,43 @@ namespace Html2Pdf.PCreator
 
 
 
+
+
+
+        private Aspose.Pdf.Image getImage(string imageUrl)
+        {
+            /**/
+            //string imageUrl = "https://www.shareicon.net/data/48x48/2016/08/05/806939_document_512x512.png";
+            int height = 0;
+            int width = 0;
+
+            using (WebClient webClient = new WebClient())
+            {
+                //var watch = System.Diagnostics.Stopwatch.StartNew();
+
+                byte[] data = webClient.DownloadData(imageUrl);
+                
+                using (MemoryStream imageStream = new MemoryStream(data))
+                {
+                    // Add image to Images collection of Page Resources
+                    pdfPage.Resources.Images.Add(imageStream);
+
+                    height = pdfPage.Resources.Images[pdfPage.Resources.Images.Count].Height;
+                    width = pdfPage.Resources.Images[pdfPage.Resources.Images.Count].Width;
+                }
+            }
+            //return pdfPage.Resources.Images[pdfPage.Resources.Images.Count];
+            /**/
+
+            Aspose.Pdf.Image image = new Image();
+            image.File = imageUrl;
+
+            image.FixHeight = height;
+            image.FixWidth = width;
+            
+
+            return image;
+        }
 
 
 

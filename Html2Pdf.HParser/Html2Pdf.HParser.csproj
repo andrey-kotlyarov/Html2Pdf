@@ -40,24 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HAttribute.cs" />
+    <Compile Include="Model\HAttribute.cs" />
     <Compile Include="HDocument.cs" />
     <Compile Include="HException.cs" />
-    <Compile Include="HNode.cs" />
-    <Compile Include="HNodeContainer.cs" />
-    <Compile Include="HNodeElement.cs" />
-    <Compile Include="HNodeSole.cs" />
-    <Compile Include="HNodeTag.cs" />
-    <Compile Include="HNodeText.cs" />
-    <Compile Include="HStyle.cs" />
-    <Compile Include="HStyleType.cs" />
-    <Compile Include="HTagType.cs" />
-    <Compile Include="HToken.cs" />
-    <Compile Include="HTokenTag.cs" />
-    <Compile Include="HTokenText.cs" />
-    <Compile Include="HUtil.EnumUtil.cs" />
-    <Compile Include="HUtil.StringUtil.cs" />
-    <Compile Include="HUtil.TagUtil.cs" />
+    <Compile Include="Model\HNode.cs" />
+    <Compile Include="Model\HNodeContainer.cs" />
+    <Compile Include="Model\HNodeElement.cs" />
+    <Compile Include="Model\HNodeSole.cs" />
+    <Compile Include="Model\HNodeTag.cs" />
+    <Compile Include="Model\HNodeText.cs" />
+    <Compile Include="Model\HStyle.cs" />
+    <Compile Include="Model\HStyleType.cs" />
+    <Compile Include="Model\HTagType.cs" />
+    <Compile Include="Model\HToken.cs" />
+    <Compile Include="Model\HTokenTag.cs" />
+    <Compile Include="Model\HTokenText.cs" />
+    <Compile Include="Util\HUtil.EnumUtil.cs" />
+    <Compile Include="Util\HUtil.StringUtil.cs" />
+    <Compile Include="Util\HUtil.TagUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

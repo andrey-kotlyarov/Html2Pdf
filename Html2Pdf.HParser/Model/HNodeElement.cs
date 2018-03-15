@@ -21,6 +21,7 @@ namespace Html2Pdf.HParser
             string indentStr = new string(' ', indent);
 
             string desc = indentStr + "[ELEMENT: " + TagType + "]";
+            desc += "\r\n" + indentStr + this.ToString();
 
             desc += "\r\n" + indentStr + HUtil.TagUtil.AttributesToString(this);
             desc += "\r\n" + indentStr + HUtil.TagUtil.StylesToString(this);
