@@ -25,9 +25,9 @@ namespace Html2Pdf.Console
                 //htmlFile = GetDataDir() + "test02.html";
                 //htmlFile = GetDataDir() + "test03.html";
                 //htmlFile = GetDataDir() + "test04.html";
-                htmlFile = GetDataDir() + "test05.html";
+                //htmlFile = GetDataDir() + "test05.html";
                 //htmlFile = GetDataDir() + "test06.html";
-
+                htmlFile = GetDataDir() + "test07.html";
             }
 
             if (args.Length > 0)
@@ -46,25 +46,27 @@ namespace Html2Pdf.Console
             
             System.Console.WriteLine("\nHtml file: " + htmlFile);
             System.Console.WriteLine("Pdf file: " + pdfFile);
-
+            System.Console.WriteLine("");
 
             try
             {
                 var hDocument = new HDocument(htmlFile);
                 var pDocument = new PDocument(pdfFile, hDocument);
 
-                System.Console.WriteLine("");
                 System.Console.Write(hDocument);
+                System.Console.WriteLine("");
             }
             catch (H2PException e)
             {
                 System.Console.WriteLine("\nH2P Exception! code: " + e.Code + ", message: " + e.Message);
             }
+            /*
             catch (Exception e)
             {
                 System.Console.WriteLine("\nException! message: " + e.Message);
             }
-            
+            */
+
             System.Console.WriteLine("\n\nProgram Finished. Press any key to exit . . .");
             System.Console.ReadKey();
         }
