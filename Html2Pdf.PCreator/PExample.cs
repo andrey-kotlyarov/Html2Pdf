@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Aspose.Pdf;
+using Aspose.Pdf.Forms;
 using Aspose.Pdf.Text;
 
 
@@ -12,6 +13,45 @@ namespace Html2Pdf.PCreator
 {
     public static class PExample
     {
+
+
+        public static void Form1(Document pdfDocument)
+        {
+            Page pdfPage = pdfDocument.Pages.Add();
+
+            TextFragment textFragment1 = new TextFragment("tF: ");
+            //Console.WriteLine("textFragment1.Rectangle.Height: " + textFragment1.Rectangle.Height);
+            textFragment1.Margin = new MarginInfo(0, 10-16, 0, 12); // =  textFragment1.Rectangle.Height - formField.Height
+
+            //textFragment1.Margin = new MarginInfo(0, 10-16, 0, 0); // =  textFragment1.Rectangle.Height - formField.Height
+            TextBoxField formField = new TextBoxField();
+
+            formField.Height = 16;
+            formField.Width = 100;
+            formField.Margin = new MarginInfo(0, 12, 0, 12);
+
+            formField.PartialName = "Text"; // ????
+
+            formField.Value = "ttt";
+            formField.IsInLineParagraph = true;
+
+
+
+            TextFragment textFragment2 = new TextFragment("Tf 2.");
+            textFragment2.IsInLineParagraph = true;
+
+
+
+
+
+            pdfPage.Paragraphs.Add(textFragment1);
+            pdfPage.Paragraphs.Add(formField);
+            pdfPage.Paragraphs.Add(textFragment2);
+
+
+
+
+        }
 
 
         public static void Text3(Document pdfDocument)
