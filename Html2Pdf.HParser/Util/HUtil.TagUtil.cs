@@ -26,7 +26,7 @@ namespace Html2Pdf.HParser
             }
 
 
-            //TEMPORARY DEBUG
+            
             public static bool IsInlineTag(HTagType tagType)
             {
                 switch (tagType)
@@ -43,7 +43,7 @@ namespace Html2Pdf.HParser
                         return false;
                 }
             }
-            //TEMPORARY DEBUG
+            
             public static bool IsBlockTag(HTagType tagType)
             {
                 switch (tagType)

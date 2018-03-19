@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<TagItemList>
+    <TagItem tagName="p" isInlineTag="false" isBlockTag="true" needEndTag="true" />
+    <TagItem tagName="div" isInlineTag="false" isBlockTag="true" needEndTag="true" />
+    <TagItem tagName="span" isInlineTag="true" isBlockTag="false" needEndTag="true" />
+    <TagItem tagName="br" isInlineTag="true" isBlockTag="false" needEndTag="false" />
+    <TagItem tagName="a" isInlineTag="true" isBlockTag="false" needEndTag="true" />
+    <TagItem tagName="img" isInlineTag="true" isBlockTag="false" needEndTag="false" />
+    <TagItem tagName="input" isInlineTag="true" isBlockTag="false" needEndTag="false" />
+</TagItemList>

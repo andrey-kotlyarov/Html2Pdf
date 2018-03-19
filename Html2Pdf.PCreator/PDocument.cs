@@ -32,11 +32,11 @@ namespace Html2Pdf.PCreator
         private Aspose.Pdf.Text.TextFragment pdfTextFragment;
         private Aspose.Pdf.Image pdfImage;
         private HNodeTag hyperlinkNode;
-
-        //private MarginInfo imageMargin;
+        
         private MarginInfo inlineParagraphMargin;
 
         private Aspose.Pdf.Forms.Field pdfFormField;
+        private Dictionary<string, RadioButtonField> pdfRadioButtonFields = new Dictionary<string, RadioButtonField>();
 
         private int currentPageNum;
 
@@ -65,9 +65,9 @@ namespace Html2Pdf.PCreator
             pdfTextFragment = null;
             pdfImage = null;
             hyperlinkNode = null;
-            //imageMargin = null;
             inlineParagraphMargin = null;
             pdfFormField = null;
+            pdfRadioButtonFields = new Dictionary<string, RadioButtonField>();
 
             updateCurrentPage();
             createBody();
@@ -145,14 +145,7 @@ namespace Html2Pdf.PCreator
                 else
                 {
                     pdfPage.Paragraphs.Add(pdfTextFragment);
-                    //
-                    //
-                    //
-                    //Console.WriteLine("pdfTextFragment.Text: " + pdfTextFragment.Text);
-                    //Console.WriteLine("  -  IsInLineParagraph: " + pdfTextFragment.IsInLineParagraph);
-                    //
-                    //
-                    //
+                    
                     if (needUpdateCurrentPage)
                     {
                         updateCurrentPage();
@@ -221,7 +214,6 @@ namespace Html2Pdf.PCreator
 
                     pdfImage.IsInLineParagraph = true;
                     pdfImage.Margin = margin;
-                    //imageMargin = margin;
                     inlineParagraphMargin = margin;
 
 
@@ -247,7 +239,6 @@ namespace Html2Pdf.PCreator
                     //
 
                     double inputHeight = pdfFormField.Height;
-                    //double textHeight = 10;
                     MarginInfo margin = new MarginInfo(0, 12, 0, 12);
                     if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
                     {
@@ -261,15 +252,8 @@ namespace Html2Pdf.PCreator
                         
                         pdfTextFragment.Margin.Bottom = textFragmentHeight - inputHeight;
                         pdfTextFragment.Margin.Top += Math.Max(0, (inputHeight - textFragmentHeight));
-
-                        //margin.Bottom = 
-
-
+                        
                         pdfTextFragment.Margin.Top += inputHeight;
-                        //margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * inputHeight);
-                        //margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * inputHeight);
-                        //debug
-                        //margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * inputHeight);
                     }
 
 
@@ -277,9 +261,6 @@ namespace Html2Pdf.PCreator
 
                     pdfFormField.IsInLineParagraph = true;
                     pdfFormField.Margin = margin;
-                    //imageMargin = margin;
-                    //inlineParagraphMargin = margin;
-                    //inlineParagraphMargin.Left = pdfFormField.Width;
                     inlineParagraphMargin = new MarginInfo(pdfFormField.Width, margin.Bottom, margin.Right, margin.Top);
                     
 
@@ -291,87 +272,9 @@ namespace Html2Pdf.PCreator
                     }
 
                     pdfFormField = null;
-
-
-                    /*
-                    double inputHeight = pdfFormField.Height;
-                    MarginInfo margin = new MarginInfo(0, 12, 0, 12);
-                    if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
-                    {
-
-                    }
-                    else
-                    {
-
-                        pdfTextFragment.Margin.Top += inputHeight;
-                        //margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * inputHeight);
-                        //margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * inputHeight);
-                        //debug
-                        margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * inputHeight);
-                    }
-
-
-                    addTextFragmentOnPage(false);
-
-                    pdfFormField.IsInLineParagraph = true;
-                    pdfFormField.Margin = margin;
-                    //imageMargin = margin;
-                    inlineParagraphMargin = margin;
-                    inlineParagraphMargin.Left = pdfFormField.Width;
-                    //pdfFormField.Margin = new MarginInfo(12, 12, 12, 12);
-
-                    pdfPage.Paragraphs.Add(pdfFormField);
-
-                    //
-                    //
-                    //
-
-
-                    pdfFormField = null;
-                    */
                 }
                 else if (pdfTextFragment == null)
                 {
-                    // TODO
-                    // Add functionality PreviousFormField !!!!
-                    //
-                    //
-                    /*
-                    HTagType tagTypeForTextFragment = HTagType.div;
-                    bool isInLineParagraphForTextFragment = false;
-
-                    
-                    bool flagPreviousImage = false;
-                    
-                    if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.img)
-                    {
-                        
-                        if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
-                        {
-                            tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
-                        }
-                        
-                        isInLineParagraphForTextFragment = true;
-                        flagPreviousImage = true;
-                    }
-                    else
-                    {
-                        
-                    }
-
-                    createTextFragmentByTagType(tagTypeForTextFragment);
-                    pdfTextFragment.IsInLineParagraph = isInLineParagraphForTextFragment;
-
-                    
-                    if (flagPreviousImage && inlineParagraphMargin != null)
-                    {
-                        pdfTextFragment.Margin.Top = -1 * pdfTextFragment.Rectangle.Height - inlineParagraphMargin.Bottom;
-                        pdfTextFragment.Margin.Bottom = inlineParagraphMargin.Bottom;
-
-                        inlineParagraphMargin = null;
-                    }
-                    */
-
                     HTagType tagTypeForTextFragment = HTagType.div;
                     bool isInLineParagraphForTextFragment = false;
 
@@ -582,11 +485,37 @@ namespace Html2Pdf.PCreator
         }
 
 
+
+        
+        private RadioButtonField getRadioButtonField(string name)
+        {
+            RadioButtonField rbf = null;
+
+            foreach (KeyValuePair<string, RadioButtonField> pair in pdfRadioButtonFields)
+            {
+                if (pair.Key == name)
+                {
+                    rbf = pair.Value;
+                    break;
+                }
+            }
+
+            if (rbf == null)
+            {
+                rbf = new RadioButtonField(pdfPage);
+
+                rbf.PartialName = name;
+                rbf.Name = name;
+                pdfDocument.Form.Add(rbf, pdfPage.Number);
+
+                pdfRadioButtonFields.Add(name, rbf);
+            }
+
+            return rbf;
+        }
+
         private Aspose.Pdf.Forms.Field getFormField(HNodeTag inputNode)
         {
-            // TODO
-            // Create functionality
-
             Aspose.Pdf.Forms.Field field = null;
 
             string fieldType = inputNode.GetAttribute("type", "text");
@@ -623,9 +552,10 @@ namespace Html2Pdf.PCreator
                 TextBoxField textBoxField = new TextBoxField();
 
                 textBoxField.Height = 16;
-                textBoxField.Width = 100;
+                textBoxField.Width = 160;
 
-                textBoxField.PartialName = "Text"; // ????
+                string name = inputNode.GetAttribute("name", "text_box_field");
+                textBoxField.PartialName = name;
 
                 string value = inputNode.GetAttribute("value", "");
                 if (!String.IsNullOrEmpty(value))
@@ -634,14 +564,12 @@ namespace Html2Pdf.PCreator
                 }
                 //Так делать ни в коем случае нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
                 //textBoxField.Value = "";
-
-                /*
-                Border border = new Border(field);
-                border.Width = 1;
-                border.Dash = new Dash(1, 1);
-                field.Border = border;
-                */
-
+                
+                //Border border = new Border(field);
+                //border.Width = 1;
+                //border.Dash = new Dash(1, 1);
+                //field.Border = border;
+                
                 return textBoxField;
             }
 
@@ -649,9 +577,12 @@ namespace Html2Pdf.PCreator
             {
                 
                 CheckboxField checkBoxField = new CheckboxField();
-                
-                checkBoxField.Height = 12;
-                checkBoxField.Width = 12;
+
+                checkBoxField.Height = 10;
+                checkBoxField.Width = 10;
+
+                string name = inputNode.GetAttribute("name", "checkbox_field");
+                checkBoxField.PartialName = name;
 
                 //Так делать ни в коем случае нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
                 //checkBoxField.Checked = true;
@@ -661,50 +592,27 @@ namespace Html2Pdf.PCreator
 
             Aspose.Pdf.Forms.Field getFormField_RadioBox()
             {
-                //return null;
-
-                //RadioButtonField radio = new RadioButtonField(pdfDocument.Pages[1]);
-                RadioButtonField rf = new RadioButtonField(pdfDocument);
-
-                //RadioButtonOptionField opt = new RadioButtonOptionField(pdfPage, new Rectangle(0, 0, 15, 15));
-                RadioButtonOptionField opt = new RadioButtonOptionField();
-
+                string name = inputNode.GetAttribute("name", "radio_button_field");
+                RadioButtonField rbf = getRadioButtonField(name);
                 
+                RadioButtonOptionField opt = new RadioButtonOptionField();
+                opt.OptionName = name + "_" + (rbf.Count + 1).ToString();
+                opt.Width = 12;
+                opt.Height = 12;
 
-                opt.OptionName = "Item";
-                opt.Width = 15;
-                opt.Height = 15;
-
+                //Так делать ни в коем случае нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
                 //opt.Border = new Border(opt);
                 //opt.Border.Width = 1;
                 //opt.Border.Style = BorderStyle.Solid;
                 //opt.Characteristics.Border = System.Drawing.Color.Black;
                 //opt.DefaultAppearance.TextColor = System.Drawing.Color.Red;
-                // opt.Caption = new TextFragment("Item");
 
-                rf.Add(opt);
-
-                return rf;
-
-                /*
-                RadioButtonOptionField rof = new RadioButtonOptionField();
-                rof.Height = 12;
-                rof.Width = 12;
-
-                return rof;
-                */
-
-                /*
-                RadioButtonField radioBoxField = new RadioButtonField(pdfDocument);
+                //opt.Caption = new TextFragment("Item1");
 
 
-                radioBoxField.Height = 12;
-                radioBoxField.Width = 12;
-
-                //radioBoxField.Selected = 1;
-
-                return radioBoxField;
-                */
+                rbf.Add(opt);
+                
+                return opt;
             }
 
             Aspose.Pdf.Forms.Field getFormField_Button()
@@ -712,10 +620,10 @@ namespace Html2Pdf.PCreator
                 ButtonField buttonField = new ButtonField();
 
                 string value = inputNode.GetAttribute("value", "");
-                
-                buttonField.Height = 32;
-                buttonField.Width = 18 + 8 * value.Length;
-                
+
+                buttonField.Height = 18;
+                buttonField.Width = 12 + 6 * value.Length;
+
                 if (!String.IsNullOrEmpty(value))
                 {
                     buttonField.Value = value;
@@ -724,6 +632,16 @@ namespace Html2Pdf.PCreator
                 return buttonField;
             }
         }
+
+
+
+
+
+
+
+
+
+
 
 
 
