@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<FontList>
+  <Font fontName="Times" fontSize="" pdfSize="12.0" />
+  <Font fontName="Times" fontSize="12pt" pdfSize="12.0" />
+  <Font fontName="Times" fontSize="14" pdfSize="14.0" />
+  <Font fontName="Times" fontSize="1em" pdfSize="12.0" />
+  <Font fontName="Times" fontSize="1.5em" pdfSize="18.0" />
+  <Font fontName="Times" fontSize="2em" pdfSize="24.0" />
+  <Font fontName="Times" fontSize="1pc" pdfSize="12.0" />
+  <Font fontName="Times" fontSize="3pc" pdfSize="36.0" />
+  <Font fontName="Times" fontSize=".5pc" pdfSize="6.0" />
+  <Font fontName="Arial" fontSize="medium" pdfSize="12.0" />
+  <Font fontName="Arial" fontSize="xx-small" pdfSize="7.0" />
+  <Font fontName="Arial" fontSize="x-small" pdfSize="7.5" />
+  <Font fontName="Arial" fontSize="small" pdfSize="10" />
+  <Font fontName="Arial" fontSize="large" pdfSize="13.5" />
+  <Font fontName="Arial" fontSize="x-large" pdfSize="18.0" />
+  <Font fontName="Arial" fontSize="xx-large" pdfSize="24.0" />
+  <Font fontName="Arial" fontSize="smaller" pdfSize="10.0" />
+  <Font fontName="Arial" fontSize="larger" pdfSize="14.0" />
+  <Font fontName="Arial" fontSize="ddd" pdfSize="12.0" />
+</FontList>

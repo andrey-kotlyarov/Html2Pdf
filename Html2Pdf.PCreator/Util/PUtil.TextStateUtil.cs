@@ -122,30 +122,30 @@ namespace Html2Pdf.PCreator
                         case "em": // Relative to the font-size of the element (2em means 2 times the size of the current font)
                             fontSize = fontSize * size;
                             break;
-                        //TODO
+                        // TODO - realize EX unit
                         case "ex": // Relative to the x-height of the current font (rarely used)
                             fontSize = size;
                             break;
-                        //TODO
+                        // TODO - realize PX unit
                         case "px": // pixels (1px = 1/96th of 1in)
                             fontSize = size;
                             break;
-                        //TODO
+                        //TODO - realize CM unit
                         case "cm":
                             fontSize = size;
                             break;
-                        //TODO
+                        //TODO - realize MM unit
                         case "mm":
                             fontSize = size;
                             break;
-                        //TODO
+                        //TODO - realize IN unit
                         case "in": // inches (1in = 96px = 2.54cm)
                             fontSize = size;
                             break;
                         case "pc": // picas (1pc = 12 pt)
                             fontSize = size * 12F;
                             break;
-                        //TODO
+                        //TODO - realize other unit
                         case "ch": // Relative to width of the "0" (zero)
                         case "rem": // Relative to font-size of the root element
                         case "vh": // Relative to 1% of the width of the viewport*
@@ -194,7 +194,6 @@ namespace Html2Pdf.PCreator
                         case "initial":
                             fontSize = TextState_Default().FontSize;
                             break;
-                        //TODO
                         case "inherit":
                             //fontSize = fontSize;
                             break;
@@ -202,9 +201,7 @@ namespace Html2Pdf.PCreator
                             break;
                     }
                 }
-
-
-
+                
                 return fontSize;
             }
 

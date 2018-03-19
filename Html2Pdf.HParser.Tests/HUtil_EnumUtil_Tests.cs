@@ -1,15 +1,13 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Html2Pdf.HParser;
 
 
 
-namespace Html2Pdf.Tests
+namespace Html2Pdf.HParser.Tests
 {
     [TestClass]
-    public class HParser_HUtil_EnumUtil
+    public class HUtil_EnumUtil_Tests
     {
-
         /*
         // TagType(s)
         p
@@ -21,7 +19,7 @@ namespace Html2Pdf.Tests
         input
         */
 
-        
+
         [TestMethod]
         public void GetTagTypeByTagName_P()
         {

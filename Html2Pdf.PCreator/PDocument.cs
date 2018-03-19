@@ -420,7 +420,8 @@ namespace Html2Pdf.PCreator
                 textSegment.TextState = parentTextState;
                 textSegment.Text = "BUTTON HERE";
             }
-            //TODO - other inline tags
+
+            // TODO - other inline tags
 
 
             return textSegment;

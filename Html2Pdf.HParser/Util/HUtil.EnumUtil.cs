@@ -101,10 +101,6 @@ namespace Html2Pdf.HParser
                 return styleEnum.Value;
             }
         }
-
-
         
-
-
     }
 }

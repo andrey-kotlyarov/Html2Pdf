@@ -12,8 +12,6 @@ namespace Html2Pdf.HParser
     {
         public static class StringUtil
         {
-
-
             public static readonly Regex Re_TokenComment = new Regex(@"<!--.*?-->");
 
             public static readonly Regex Re_TokenFirstText = new Regex(@"^[^<>]+");
@@ -53,12 +51,8 @@ namespace Html2Pdf.HParser
                 decodeText = decodeText.Replace("&lt;", "<");
                 decodeText = decodeText.Replace("&gt;", ">");
 
-                //TODO
-                // add other Ampersand Sequence
-
-
-
-
+                // TODO - add other Ampersand Sequence
+                
                 return decodeText;
             }
 

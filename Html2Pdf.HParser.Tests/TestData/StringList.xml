@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<StringList>
+  <String source="&amp;amp;" ampDecode="&amp;" />
+  <String source="&amp;quot;" ampDecode="&quot;" />
+  <String source="&amp;nbsp;" ampDecode=" " />
+  <String source="&amp;lt;" ampDecode="&lt;" />
+  <String source="&amp;gt;" ampDecode="&gt;" />
+  <String source="&amp;lt;&amp;amp;&amp;gt;" ampDecode="&lt;&amp;&gt;" />
+  <String source="&amp;quot; &amp;nbsp; &amp;quot;" ampDecode="&quot;   &quot;" />
+</StringList>
