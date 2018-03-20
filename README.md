@@ -6,39 +6,36 @@ Console application for HTML file to PDF document conversion.
 ### Usage
 
 ```
-Html2Pdf.Console.exe [html_file] [pdf_file]
+> Html2Pdf.Console.exe [html_file] [pdf_file]
 ```
 or
 ```
-Html2Pdf.Console.exe [html_file]
+> Html2Pdf.Console.exe [html_file]
 ```
 or
 ```
-Html2Pdf.Console.exe
+> Html2Pdf.Console.exe
 ```
 
 
+If parameter **[pdf_file]** is not specified then pdf file will have the same name.
+If parameter **[html_file]** is not specified then **test.html** file name will be used.
 
-If no file is specified for *[pdf_file]* then pdf file name is generated at the basis of html file name.
-If no file is specified for *[html_file]* then using **test.html** file.
-
-Default folder for found and created files is:
-* In Debug configuration using *Data* folder in root directory of solution;
-* In Release configuration using current folder of exe file;
+Default folder for find and create files is:
+* **Data** folder in root directory of solution for Debug configuration;
+* Current folder of application exe file for Release configuration;
 
 ### Project Components and Used Technologies
 * .Net 4.6.1 console application on C#
-* Html parser established by native C# language
-* Aspose.Pdf library for creating PDF document
+* Html parser developed with native C# language
+* Aspose.Pdf library
 * MS Tests
 
 
+### Supported Html tags and attributes
+Application works with valid XHTML documents only and supports limited number tags and attributes.
 
-
-### Html tags support
-Application work with valid XHTML documents only. Application support limited number tags and attributes.
-
-List of tags that application support are below:
+List of supported tags:
 * p
 * div
 * span
@@ -48,7 +45,7 @@ List of tags that application support are below:
 * form
 * input
 
-List of style attribute types that application support are below:
+List of supported style properties:
 * color
 * font-family
 * font-size
