@@ -19,13 +19,13 @@ namespace Html2Pdf.PCreator
             {
                 TextState defaultTextState = new TextState();
                 defaultTextState.ForegroundColor = Aspose.Pdf.Color.Black;
-                defaultTextState.Font = FontRepository.FindFont("Times");
+                defaultTextState.Font = FontRepository.FindFont("TimesNewRoman");
                 defaultTextState.FontStyle = FontStyles.Regular;
                 defaultTextState.FontSize = 12F;
 
                 defaultTextState.StrikeOut = false;
                 defaultTextState.Underline = false;
-
+                
                 return defaultTextState;
             }
 
@@ -47,7 +47,7 @@ namespace Html2Pdf.PCreator
                             textState.FontSize = GetFontSize(style.styleValue);
                             break;
                         case HStyleType.fontWeight:
-                            //
+                            textState.FontStyle = GetFontStyle(style.styleValue);
                             break;
                         case HStyleType.textDecoration:
                             SetTextDecoration(textState, style.styleValue);
@@ -64,6 +64,71 @@ namespace Html2Pdf.PCreator
                 textState.ForegroundColor = Aspose.Pdf.Color.Blue;
                 textState.Underline = true;
             }
+
+            public static void TextState_ModifyForBold(TextState textState)
+            {
+                textState.FontStyle = FontStyles.Bold;
+            }
+
+            public static void TextState_ModifyForItalic(TextState textState)
+            {
+                textState.FontStyle = FontStyles.Italic;
+            }
+
+
+            public static FontStyles GetFontStyle(string strFontWeight)
+            {
+                FontStyles fontStyle = FontStyles.Regular;
+
+                Regex re = new Regex(@"^(\d00)$");
+
+                Match m = re.Match(strFontWeight);
+
+                if (m.Success)
+                {
+                    int weight = Convert.ToInt32(m.Groups[1].Value, new CultureInfo("en-US"));
+
+                    switch (weight)
+                    {
+                        case 500:
+                        case 600:
+                        case 700:
+                        case 800:
+                        case 900:
+                            fontStyle = FontStyles.Bold;
+                            break;
+                        case 100:
+                        case 200:
+                        case 300:
+                        case 400:
+                        default:
+                            fontStyle = FontStyles.Regular;
+                            break;
+                    }
+                }
+                else
+                {
+                    //normal
+                    //bold
+                    //bolder
+                    //lighter
+                    switch (strFontWeight.Trim().ToLower())
+                    {
+                        case "bold":
+                        case "bolder":
+                            fontStyle = FontStyles.Bold;
+                            break;
+                        case "normal":
+                        case "lighter":
+                        default:
+                            fontStyle = FontStyles.Regular;
+                            break;
+                    }
+                }
+
+                return fontStyle;
+            }
+
 
 
             public static Aspose.Pdf.Color GetColor(string strColor)

@@ -5,6 +5,8 @@
   <Tag tagName="div" isInlineTag="false" isBlockTag="true" needEndTag="true" />
   <Tag tagName="span" isInlineTag="true" isBlockTag="false" needEndTag="true" />
   <Tag tagName="br" isInlineTag="true" isBlockTag="false" needEndTag="false" />
+  <Tag tagName="b" isInlineTag="true" isBlockTag="false" needEndTag="true" />
+  <Tag tagName="i" isInlineTag="true" isBlockTag="false" needEndTag="true" />
   <Tag tagName="a" isInlineTag="true" isBlockTag="false" needEndTag="true" />
   <Tag tagName="img" isInlineTag="true" isBlockTag="false" needEndTag="false" />
   <Tag tagName="input" isInlineTag="true" isBlockTag="false" needEndTag="false" />

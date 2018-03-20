@@ -404,6 +404,16 @@ namespace Html2Pdf.PCreator
                 PUtil.TextStateUtil.TextState_ModifyForHyperlink(parentTextState);
                 PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
             }
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.b)
+            {
+                PUtil.TextStateUtil.TextState_ModifyForBold(parentTextState);
+                PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
+            }
+            if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.i)
+            {
+                PUtil.TextStateUtil.TextState_ModifyForItalic(parentTextState);
+                PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
+            }
             
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.img)
             {
@@ -650,9 +660,10 @@ namespace Html2Pdf.PCreator
 
 
 
-
+        //
         //
         // DEBUG BLOCK (start)
+        //
         //
 
         public void PDocument_debug(string fileFullName, HDocument hDocument)
@@ -932,8 +943,9 @@ namespace Html2Pdf.PCreator
         }
 
         //
+        //
         // DEBUG BLOCK (end)
         //
-
+        //
     }
 }

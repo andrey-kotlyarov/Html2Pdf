@@ -33,6 +33,8 @@ namespace Html2Pdf.HParser
                 {
                     case HTagType.span:
                     case HTagType.br:
+                    case HTagType.b:
+                    case HTagType.i:
                     case HTagType.a:
                     case HTagType.img:
                     case HTagType.input:

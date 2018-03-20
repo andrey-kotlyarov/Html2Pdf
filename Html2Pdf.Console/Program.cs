@@ -27,7 +27,9 @@ namespace Html2Pdf.Console
                 //htmlFile = GetDataDir() + "test04.html";
                 //htmlFile = GetDataDir() + "test05.html";
                 //htmlFile = GetDataDir() + "test06.html";
-                htmlFile = GetDataDir() + "test07.html";
+                //htmlFile = GetDataDir() + "test07.html";
+
+                htmlFile = GetDataDir() + "test.html";
             }
 
             if (args.Length > 0)
@@ -81,7 +83,8 @@ namespace Html2Pdf.Console
             }
             else
             {
-                return Path.Combine(currentDir.FullName, @"Data\");
+                //return Path.Combine(currentDir.FullName, @"Data\");
+                return currentDir.FullName + @"\";
             }
 
         }

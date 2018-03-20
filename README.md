@@ -40,6 +40,8 @@ List of supported tags:
 * div
 * span
 * br
+* b
+* i
 * a
 * img
 * form
