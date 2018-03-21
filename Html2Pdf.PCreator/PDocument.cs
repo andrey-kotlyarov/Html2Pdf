@@ -32,7 +32,8 @@ namespace Html2Pdf.PCreator
         private Aspose.Pdf.Text.TextFragment pdfTextFragment;
         private Aspose.Pdf.Image pdfImage;
         private HNodeTag hyperlinkNode;
-        
+        private Aspose.Pdf.Text.TextSegment pdfNewLine;
+
         private MarginInfo inlineParagraphMargin;
 
         private Aspose.Pdf.Forms.Field pdfFormField;
@@ -46,10 +47,11 @@ namespace Html2Pdf.PCreator
 
         public PDocument(string fileFullName, HDocument hDocument)
         {
+            /*
             //DEBUG
-            //PDocument_debug(fileFullName, hDocument);
-            //return;
-
+            PDocument_debug(fileFullName, hDocument);
+            return;
+            */
 
 
             bodyNode = hDocument.BodyNode;
@@ -65,6 +67,7 @@ namespace Html2Pdf.PCreator
             pdfTextFragment = null;
             pdfImage = null;
             hyperlinkNode = null;
+            pdfNewLine = null;
             inlineParagraphMargin = null;
             pdfFormField = null;
             pdfRadioButtonFields = new Dictionary<string, RadioButtonField>();
@@ -196,7 +199,28 @@ namespace Html2Pdf.PCreator
             {
                 TextSegment textSegment = getTextSegment(node, nodeTextState);
 
-                if (pdfImage != null)
+                if (pdfNewLine != null)
+                {
+                    double marginTop = 0;
+                    double marginBottom = 0;
+                    if (pdfTextFragment != null)
+                    {
+                        marginBottom = pdfTextFragment.Margin.Bottom;
+                        pdfTextFragment.Margin.Bottom = 0;
+                    }
+
+                    addTextFragmentOnPage();
+                    createTextFragmentByTagType(HTagType.div);
+
+                    if (pdfTextFragment != null)
+                    {
+                        pdfTextFragment.Margin.Top = marginTop;
+                        pdfTextFragment.Margin.Bottom = marginBottom;
+                    }
+
+                    pdfNewLine = null;
+                }
+                else if (pdfImage != null)
                 {
                     double imageHeight = pdfImage.FixHeight;
                     MarginInfo margin = new MarginInfo(0, 12, 0, 12);
@@ -395,9 +419,15 @@ namespace Html2Pdf.PCreator
             }
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.br)
             {
+                /*
+                //слетают стили!!!
                 textSegment = new TextSegment();
                 //textSegment.TextState = parentTextState;
                 textSegment.Text = Environment.NewLine;
+                */
+
+                pdfNewLine = new TextSegment();
+                pdfNewLine.Text = Environment.NewLine;
             }
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
@@ -681,12 +711,12 @@ namespace Html2Pdf.PCreator
             pdfDocument = new Document();
 
 
-            PExample.Form1(pdfDocument);
+            //PExample.Form1(pdfDocument);
 
             //PExample.Text1(pdfDocument);
             //PExample.Text2(pdfDocument);
             //PExample.Text3(pdfDocument);
-
+            PExample.Text4(pdfDocument);
 
             //pdfPage = pdfDocument.Pages.Add();
             //PExample.Graph1(pdfPage);

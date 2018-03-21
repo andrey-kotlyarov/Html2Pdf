@@ -1,25 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html>
-<body style="color: #999">
+<body style="color: #999; font-size: 12pt">
+	
 	<!-- comment first -->
 	
-	<p>Standard paragraph 1.</p>
+	<p>Standard paragraph.</p>
 	
-	<p><img src="https://www.shareicon.net/data/48x48/2016/08/05/806939_document_512x512.png" /></p>
-	<p style="font-size: 16pt; font-family: Tahoma">Paragraph text &lt;&amp;&gt; <span style="color: red; font-weight: bold">red bold text</span> simple text.</p>
-	<p style="font-size: 16pt; font-family: Tahoma">Paragraph text &lt;&amp;&gt; <b style="color: green;">green bold text</b> simple text.</p>
-	<p style="font-size: 16pt; font-family: Tahoma">Paragraph text &lt;&amp;&gt; <i style="color: brown;">brown italic text</i> simple text.</p>
+	<div style='font-size: 14pt;'>
+		<p style="font-family: Tahoma">Paragraph with <span style="color: red; font-weight: bold">red bold text</span> tahoma font.</p>
+		<p style="font-family: Arial">Paragraph with <b style="color: green;">green bold text</b> arial font.</p>
+		<p style="font-family: Verdana">Paragraph with <i style="color: brown;">brown italic text</i> verdana font.</p>
+		<p style='font-size: 16pt;'>Paragraph with <a href="http://google.com">hyperlink to Google</a>.</p>
+	</div>
 	
-	<!-- comment second -->
+	<div style='font-size: 20pt; color: #909090;'>
+		<div>Div setting as parent</div>
+		<div style='color: red'>Div color red</div>
+		<div style='font-size: 32pt'>Div font size 32pt</div>
+		<div style='font-family: arial'>Div font arial</div>
+		<div style='font-family: tahoma; color: green'>Div font tahoma green</div>
+		<div style='font-family: tahoma;'>Div font tahoma <span style='color: green'>span green</span></div>
+		<div style='font-family: arial'>Div font arial <span style='color: red'>span red and <span style='font-size: 40pt;'>size 40pt</span></span></div>
+		<!-- Multiline comment
+		<div>Div 1</div>
+		<div>Div 2</div>
+		<div>Div 3</div>
+		<div>Div 4</div>
+		<div>Div 5</div>
+		-->
+	</div>
 	
-	<p>Standard paragraph 2.</p>
-	<!--
-	Multiline comment
-	Second line of multiline comment
-	-->
+	<form style='font-size: 13pt; color: #333'>
+		<p>TextBox: <input type='text' value="the textbox text" /></p>
+		<p>Checkbox: <input type='checkbox' name='cb1' value="1" /></p>
+		<p>Radio 1: <input type='radio' name='r1' value="1" /> Yes</p>
+		<p>Radio 2: <input type='radio' name='r1' value="2" /> No</p>
+		<p><input type='button' value="The Button" /></p>
+		<!--<p><input type="button" value="" /></p>-->
+		<p><input type="button" value="the long string in button value" /></p>
+	</form>
 	
-	<p style="color: green; text-decoration: underline; font-family: arial;<!-- inline comment -->">Paragraph of green text.</p>
-	<p style="color: #990099; font-size: 1.25pc; font-weight: 600"><span style="font-weight: 200; font-size: 20pt">#990099</span> text.</p>
+	<p style='font-size: 16pt; color:#606060;'>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui do<b>lorem ipsum</b>, quia <b>dolor sit, amet, consectetur, adipisci</b> v<b>elit, sed</b> quia non numquam <b>eius modi tempor</b>a <b>incidunt, ut labore et dolore magna</b>m <b>aliqua</b>m quaerat voluptatem. <b>Ut enim ad minima veniam, quis nostru</b>m <b>exercitation</b>em <b>ullam co</b>rporis suscipit <b>labori</b>o<b>s</b>am, <b>nisi ut aliquid ex ea commodi consequat</b>ur? <b>Quis aute</b>m vel eum <b>iure reprehenderit</b>, qui <b>in</b> ea <b>voluptate velit esse</b>, quam nihil molestiae <b>c</b>onsequatur, vel <b>illum</b>, qui <b>dolore</b>m <b>eu</b>m <b>fugiat</b>, quo voluptas <b>nulla pariatur</b>? At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias <b>exceptur</b>i <b>sint, obcaecat</b>i <b>cupiditat</b>e <b>non provident</b>, similique <b>sunt in culpa, qui officia deserunt mollit</b>ia <b>anim</b>i, <b>id est laborum</b> et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+	
+	
+	<p>Paragraph with Ampersand Sequence Symbols. &lt;&amp;&gt; &quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;.</p>
+	<p style="color: green; text-decoration: underline; font-family: arial;<!-- inline comment -->">Paragraph of green and underline text.</p>
+	<p style="color: #cc0001; font-size: 1.25pc; font-weight: bold"><span style="font-weight: normal; font-size: 20pt">#cc0001 color</span> text.
+	And <span style="text-decoration: line-through; font-weight: normal; color: #00cc01">normal StrikeOut text</span>.
+	</p>
+	
+	
 </body>
 </html>

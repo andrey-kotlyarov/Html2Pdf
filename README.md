@@ -39,7 +39,7 @@ List of supported tags:
 * p
 * div
 * span
-* br
+* br (in development)
 * b
 * i
 * a
@@ -51,5 +51,5 @@ List of supported style properties:
 * color
 * font-family
 * font-size
-* font-weight (in development)
+* font-weight
 * text-decoration

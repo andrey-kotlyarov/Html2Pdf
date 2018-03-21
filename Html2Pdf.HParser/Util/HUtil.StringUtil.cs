@@ -21,8 +21,7 @@ namespace Html2Pdf.HParser
             public static readonly Regex Re_TokenTagOpen = new Regex(@"<([^\s]+)\s?(.+)?>");
             public static readonly Regex Re_TokenTagSole = new Regex(@"<([^\s]+)\s?(.+)?/>");
 
-
-            public static readonly Regex Re_TagAttributes = new Regex(@"\s*([^\s]+)\s*=\s*\""([^\""]+)\""\s*");
+            public static readonly Regex Re_TagAttributes = new Regex(@"\s*([^\s]+)\s*=\s*[""']([^""']+)[""']\s*");
             public static readonly Regex Re_TagStyles = new Regex(@"\s*([^\s]+)\s*\:\s*([^\s]+?)\s*(;|$)");
 
 

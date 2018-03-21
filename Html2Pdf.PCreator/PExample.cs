@@ -54,6 +54,47 @@ namespace Html2Pdf.PCreator
         }
 
 
+        public static void Text4(Document pdfDocument)
+        {
+            Page pdfPage = pdfDocument.Pages.Add();
+
+            TextState defaultTextState = new TextState();
+            defaultTextState.ForegroundColor = Aspose.Pdf.Color.Brown;
+            defaultTextState.Font = FontRepository.FindFont("TimesNewRoman");
+            defaultTextState.FontStyle = FontStyles.Regular;
+            defaultTextState.FontSize = 13;
+
+            defaultTextState.StrikeOut = false;
+            defaultTextState.Underline = false;
+
+            //pdfPage.PageInfo.Margin = new MarginInfo(0, 0, 0, 12);
+            //pdfPage.PageInfo.DefaultTextState = defaultTextState;
+
+
+
+            TextFragment textFragment = new TextFragment();
+
+
+            TextSegment ts1 = new TextSegment();
+            ts1.TextState = defaultTextState;
+            ts1.Text = "First line";
+
+
+            TextSegment ts2 = new TextSegment();
+            ts2.TextState = defaultTextState;
+            ts2.Text = "Second line";
+
+            TextSegment ts_br = new TextSegment();
+            ts_br.Text = Environment.NewLine;
+
+            textFragment.Segments.Add(ts1);
+            textFragment.Segments.Add(ts_br);
+            textFragment.Segments.Add(ts2);
+
+            pdfPage.Paragraphs.Add(textFragment);
+        }
+
+
         public static void Text3(Document pdfDocument)
         {
             Page pdfPage = pdfDocument.Pages.Add();

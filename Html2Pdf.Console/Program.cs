@@ -15,21 +15,16 @@ namespace Html2Pdf.Console
         static void Main(string[] args)
         {
             System.Console.WriteLine("Html2Pdf.Console Started.");
+            System.Console.WriteLine("");
 
             string htmlFile = String.Empty;
             string pdfFile = String.Empty;
 
             if (args.Length == 0)
             {
-                //htmlFile = GetDataDir() + "test01.html";
-                //htmlFile = GetDataDir() + "test02.html";
-                //htmlFile = GetDataDir() + "test03.html";
-                //htmlFile = GetDataDir() + "test04.html";
-                //htmlFile = GetDataDir() + "test05.html";
-                //htmlFile = GetDataDir() + "test06.html";
-                //htmlFile = GetDataDir() + "test07.html";
-
                 htmlFile = GetDataDir() + "test.html";
+                //htmlFile = GetDataDir() + "test1.html";
+                //htmlFile = GetDataDir() + "test2.html";
             }
 
             if (args.Length > 0)
@@ -46,7 +41,7 @@ namespace Html2Pdf.Console
                 pdfFile = htmlFile.Replace(".html", ".pdf");
             }
             
-            System.Console.WriteLine("\nHtml file: " + htmlFile);
+            System.Console.WriteLine("Html file: " + htmlFile);
             System.Console.WriteLine("Pdf file: " + pdfFile);
             System.Console.WriteLine("");
 
@@ -55,20 +50,22 @@ namespace Html2Pdf.Console
                 var hDocument = new HDocument(htmlFile);
                 var pDocument = new PDocument(pdfFile, hDocument);
 
-                System.Console.Write(hDocument);
-                System.Console.WriteLine("");
+                //DEBUG
+                //System.Console.Write(hDocument);
+                //System.Console.WriteLine("");
+
+                System.Console.WriteLine("PDF File was Created (" + pdfFile + ")");
             }
             catch (H2PException e)
             {
-                System.Console.WriteLine("\nH2P Exception! code: " + e.Code + ", message: " + e.Message);
+                System.Console.WriteLine("H2P Exception! code: " + e.Code + ", message: " + e.Message);
             }
             catch (Exception e)
             {
-                System.Console.WriteLine("\nException! message: " + e.Message);
+                System.Console.WriteLine("Exception! message: " + e.Message);
             }
             
-
-            System.Console.WriteLine("\n\nProgram Finished. Press any key to exit . . .");
+            System.Console.WriteLine("\r\n\r\nProgram Finished. Press any key to exit . . .");
             System.Console.ReadKey();
         }
 
