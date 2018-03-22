@@ -10,4 +10,5 @@
   <Tag tagName="a" isInlineTag="true" isBlockTag="false" needEndTag="true" />
   <Tag tagName="img" isInlineTag="true" isBlockTag="false" needEndTag="false" />
   <Tag tagName="input" isInlineTag="true" isBlockTag="false" needEndTag="false" />
+  <Tag tagName="button" isInlineTag="true" isBlockTag="false" needEndTag="true" />
 </TagItemList>

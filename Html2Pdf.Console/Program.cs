@@ -83,7 +83,6 @@ namespace Html2Pdf.Console
                 //return Path.Combine(currentDir.FullName, @"Data\");
                 return currentDir.FullName + @"\";
             }
-
         }
     }
 }

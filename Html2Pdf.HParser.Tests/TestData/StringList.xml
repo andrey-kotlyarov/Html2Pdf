@@ -1,11 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <StringList>
-  <String source="&amp;amp;" ampDecode="&amp;" />
-  <String source="&amp;quot;" ampDecode="&quot;" />
   <String source="&amp;nbsp;" ampDecode=" " />
+  <String source="&amp;#160;" ampDecode=" " />
+  <String source="&amp;#xa0;" ampDecode=" " />  
+  <String source="&amp;quot;" ampDecode="&quot;" />
+  <String source="&amp;#34;" ampDecode="&quot;" />
+  <String source="&amp;#x22;" ampDecode="&quot;" />
+  <String source="&amp;amp;" ampDecode="&amp;" />
+  <String source="&amp;#38;" ampDecode="&amp;" />
+  <String source="&amp;#X26;" ampDecode="&amp;" />
   <String source="&amp;lt;" ampDecode="&lt;" />
+  <String source="&amp;#60;" ampDecode="&lt;" />
+  <String source="&amp;#X3C;" ampDecode="&lt;" />
   <String source="&amp;gt;" ampDecode="&gt;" />
+  <String source="&amp;#62;" ampDecode="&gt;" />
+  <String source="&amp;#X3e;" ampDecode="&gt;" />
+  <String source="&amp;copy;" ampDecode="©" />
+  <String source="&amp;#169;" ampDecode="©" />
+  <String source="&amp;#xA9;" ampDecode="©" />
   <String source="&amp;lt;&amp;amp;&amp;gt;" ampDecode="&lt;&amp;&gt;" />
   <String source="&amp;quot; &amp;nbsp; &amp;quot;" ampDecode="&quot;   &quot;" />
 </StringList>

@@ -17,6 +17,7 @@ namespace Html2Pdf.HParser.Tests
         a
         img
         input
+        button
         */
 
 
@@ -118,7 +119,18 @@ namespace Html2Pdf.HParser.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        public void GetTagTypeByTagName_BUTTON()
+        {
+            // arrange
+            string tagName = "button";
+            HTagType expected = HTagType.button;
 
+            // act
+            HTagType actual = HUtil.EnumUtil.GetTagTypeByTagName(tagName);
+
+            // assert
+            Assert.AreEqual(expected, actual);
+        }
 
 
 

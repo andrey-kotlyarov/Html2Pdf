@@ -183,186 +183,196 @@ namespace Html2Pdf.PCreator
                 PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, nodeTextState);
             }
 
-            //
-            //
-            //
+            // Block element
             if ((node is HNodeTag) && HUtil.TagUtil.IsBlockTag((node as HNodeTag).TagType))
             {
                 addTextFragmentOnPage();
                 createTextFragmentByTagType((node as HNodeTag).TagType);
             }
+            // Inline element or Text element
             else if (
                 (node is HNodeTag) && HUtil.TagUtil.IsInlineTag((node as HNodeTag).TagType)
                 ||
                 (node is HNodeText)
             )
             {
-                TextSegment textSegment = getTextSegment(node, nodeTextState);
-
-                if (pdfNewLine != null)
-                {
-                    double marginTop = 0;
-                    double marginBottom = 0;
-                    if (pdfTextFragment != null)
-                    {
-                        marginBottom = pdfTextFragment.Margin.Bottom;
-                        pdfTextFragment.Margin.Bottom = 0;
-                    }
-
-                    addTextFragmentOnPage();
-                    createTextFragmentByTagType(HTagType.div);
-
-                    if (pdfTextFragment != null)
-                    {
-                        pdfTextFragment.Margin.Top = marginTop;
-                        pdfTextFragment.Margin.Bottom = marginBottom;
-                    }
-
-                    pdfNewLine = null;
-                }
-                else if (pdfImage != null)
-                {
-                    double imageHeight = pdfImage.FixHeight;
-                    MarginInfo margin = new MarginInfo(0, 12, 0, 12);
-                    if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
-                    {
-                        
-                    }
-                    else
-                    {
-                        pdfTextFragment.Margin.Top += imageHeight;
-                        margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * imageHeight);
-                    }
-                    
-                    addTextFragmentOnPage(false);
-
-                    pdfImage.IsInLineParagraph = true;
-                    pdfImage.Margin = margin;
-                    inlineParagraphMargin = margin;
-
-
-                    if (hyperlinkNode != null)
-                    {
-                        Aspose.Pdf.WebHyperlink pdfHyperlink = new WebHyperlink(hyperlinkNode.GetAttribute("href", "#"));
-                        pdfImage.Hyperlink = pdfHyperlink;
-                    }
-
-                    pdfPage.Paragraphs.Add(pdfImage);
-
-                    if (node.NextNode == null)
-                    {
-                        updateCurrentPage();
-                    }
-
-                    pdfImage = null;
-                }
-                else if (pdfFormField != null)
+                if ((node is HNodeText) && (node as HNodeText).ParentNode != null && ((node as HNodeText).ParentNode is HNodeTag) && (((node as HNodeText).ParentNode as HNodeTag)).TagType == HTagType.button)
                 {
                     //
-                    //
-                    //
-
-                    double inputHeight = pdfFormField.Height;
-                    MarginInfo margin = new MarginInfo(0, 12, 0, 12);
-                    if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
-                    {
-
-                    }
-                    else
-                    {
-                        double textFragmentHeight = pdfTextFragment.Rectangle.Height;
-
-                        margin = pdfTextFragment.Margin;
-                        
-                        pdfTextFragment.Margin.Bottom = textFragmentHeight - inputHeight;
-                        pdfTextFragment.Margin.Top += Math.Max(0, (inputHeight - textFragmentHeight));
-                        
-                        pdfTextFragment.Margin.Top += inputHeight;
-                    }
-
-
-                    addTextFragmentOnPage(false);
-
-                    pdfFormField.IsInLineParagraph = true;
-                    pdfFormField.Margin = margin;
-                    inlineParagraphMargin = new MarginInfo(pdfFormField.Width, margin.Bottom, margin.Right, margin.Top);
-                    
-
-                    pdfPage.Paragraphs.Add(pdfFormField);
-
-                    if (node.NextNode == null)
-                    {
-                        updateCurrentPage();
-                    }
-
-                    pdfFormField = null;
                 }
-                else if (pdfTextFragment == null)
+                else
                 {
-                    HTagType tagTypeForTextFragment = HTagType.div;
-                    bool isInLineParagraphForTextFragment = false;
+                    // Create TextSegment for element
+                    TextSegment textSegment = getTextSegment(node, nodeTextState);
 
-
-                    bool flagPreviousImage = false;
-                    bool flagPreviousInput = false;
-
-                    if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.img)
+                    // New Line, <BR />
+                    if (pdfNewLine != null)
                     {
-                        // prev image element
-                        if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
+                        double marginTop = 0;
+                        double marginBottom = 0;
+                        if (pdfTextFragment != null)
                         {
-                            tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
+                            marginBottom = pdfTextFragment.Margin.Bottom;
+                            pdfTextFragment.Margin.Bottom = 0;
                         }
 
-                        isInLineParagraphForTextFragment = true;
-                        flagPreviousImage = true;
-                    }
-                    else if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.input)
-                    {
-                        // prev input element
-                        if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
+                        addTextFragmentOnPage();
+                        createTextFragmentByTagType(HTagType.div);
+
+                        if (pdfTextFragment != null)
                         {
-                            tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
+                            pdfTextFragment.Margin.Top = marginTop;
+                            pdfTextFragment.Margin.Bottom = marginBottom;
                         }
 
-                        isInLineParagraphForTextFragment = true;
-                        flagPreviousInput = true;
+                        pdfNewLine = null;
                     }
-                    else
+                    // Image
+                    else if (pdfImage != null)
                     {
+                        double imageHeight = pdfImage.FixHeight;
+                        MarginInfo margin = new MarginInfo(0, 12, 0, 12);
+                        if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
+                        {
 
+                        }
+                        else
+                        {
+                            pdfTextFragment.Margin.Top += imageHeight;
+                            margin = new MarginInfo(0, pdfTextFragment.Margin.Bottom, 0, -1 * imageHeight);
+                        }
+
+                        addTextFragmentOnPage(false);
+
+                        pdfImage.IsInLineParagraph = true;
+                        pdfImage.Margin = margin;
+                        inlineParagraphMargin = margin;
+
+
+                        if (hyperlinkNode != null)
+                        {
+                            Aspose.Pdf.WebHyperlink pdfHyperlink = new WebHyperlink(hyperlinkNode.GetAttribute("href", "#"));
+                            pdfImage.Hyperlink = pdfHyperlink;
+                        }
+
+                        pdfPage.Paragraphs.Add(pdfImage);
+
+                        if (node.NextNode == null)
+                        {
+                            updateCurrentPage();
+                        }
+
+                        pdfImage = null;
                     }
-
-                    createTextFragmentByTagType(tagTypeForTextFragment);
-                    pdfTextFragment.IsInLineParagraph = isInLineParagraphForTextFragment;
-
-
-                    if ((flagPreviousImage || flagPreviousInput) && inlineParagraphMargin != null)
+                    // Form Field Element
+                    else if (pdfFormField != null)
                     {
-                        pdfTextFragment.Margin.Top = -1 * pdfTextFragment.Rectangle.Height - inlineParagraphMargin.Bottom;
-                        pdfTextFragment.Margin.Bottom = inlineParagraphMargin.Bottom;
+                        //
+                        //
+                        //
 
-                        pdfTextFragment.Margin.Left = inlineParagraphMargin.Left;
+                        double inputHeight = pdfFormField.Height;
+                        MarginInfo margin = new MarginInfo(0, 12, 0, 12);
+                        if (pdfTextFragment == null || pdfTextFragment.Segments.Count == 0 || (pdfTextFragment.Segments.Count == 1 && pdfTextFragment.Segments[1].Text == String.Empty))
+                        {
 
-                        inlineParagraphMargin = null;
+                        }
+                        else
+                        {
+                            double textFragmentHeight = pdfTextFragment.Rectangle.Height;
+
+                            margin = pdfTextFragment.Margin;
+
+                            pdfTextFragment.Margin.Bottom = textFragmentHeight - inputHeight;
+                            pdfTextFragment.Margin.Top += Math.Max(0, (inputHeight - textFragmentHeight));
+
+                            pdfTextFragment.Margin.Top += inputHeight;
+                        }
+
+
+                        addTextFragmentOnPage(false);
+
+                        pdfFormField.IsInLineParagraph = true;
+                        pdfFormField.Margin = margin;
+                        inlineParagraphMargin = new MarginInfo(pdfFormField.Width, margin.Bottom, margin.Right, margin.Top);
+
+
+                        pdfPage.Paragraphs.Add(pdfFormField);
+
+                        if (node.NextNode == null)
+                        {
+                            updateCurrentPage();
+                        }
+
+                        pdfFormField = null;
+                    }
+                    // TextFragment for InLineParagraph mode
+                    else if (pdfTextFragment == null)
+                    {
+                        HTagType tagTypeForTextFragment = HTagType.div;
+                        bool isInLineParagraphForTextFragment = false;
+
+
+                        bool flagPreviousImage = false;
+                        bool flagPreviousInput = false;
+
+                        if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.img)
+                        {
+                            // prev image element
+                            if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
+                            {
+                                tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
+                            }
+
+                            isInLineParagraphForTextFragment = true;
+                            flagPreviousImage = true;
+                        }
+                        else if (node.PrevNode != null && (node.PrevNode is HNodeTag) && (node.PrevNode as HNodeTag).TagType == HTagType.input)
+                        {
+                            // prev input element
+                            if (node.ParentNode != null && (node.ParentNode is HNodeTag) && HUtil.TagUtil.IsBlockTag((node.ParentNode as HNodeTag).TagType))
+                            {
+                                tagTypeForTextFragment = (node.ParentNode as HNodeTag).TagType;
+                            }
+
+                            isInLineParagraphForTextFragment = true;
+                            flagPreviousInput = true;
+                        }
+                        else
+                        {
+
+                        }
+
+                        createTextFragmentByTagType(tagTypeForTextFragment);
+                        pdfTextFragment.IsInLineParagraph = isInLineParagraphForTextFragment;
+
+
+                        if ((flagPreviousImage || flagPreviousInput) && inlineParagraphMargin != null)
+                        {
+                            pdfTextFragment.Margin.Top = -1 * pdfTextFragment.Rectangle.Height - inlineParagraphMargin.Bottom;
+                            pdfTextFragment.Margin.Bottom = inlineParagraphMargin.Bottom;
+
+                            pdfTextFragment.Margin.Left = inlineParagraphMargin.Left;
+
+                            inlineParagraphMargin = null;
+                        }
+                        
                     }
 
 
+
+                    if (textSegment != null && pdfTextFragment != null)
+                    //if (textSegment != null)
+                    {
+                        pdfTextFragment.Segments.Add(textSegment);
+                    }
 
                 }
-                
-                if (textSegment != null && pdfTextFragment != null)
-                //if (textSegment != null)
-                {
-                    pdfTextFragment.Segments.Add(textSegment);
-                }
+
             }
-            //
-            //
-            //
 
             //
-            //
+            // Create Nodes recursively with consider the hyperlink 
             //
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
@@ -387,7 +397,7 @@ namespace Html2Pdf.PCreator
 
 
             //
-            //
+            // Add Text Fragment on Page (if need)
             //
             if ((node is HNodeTag) && HUtil.TagUtil.IsBlockTag((node as HNodeTag).TagType))
             {
@@ -403,6 +413,7 @@ namespace Html2Pdf.PCreator
         {
             TextSegment textSegment = null;
 
+            // Text element
             if (node is HNodeText)
             {
                 textSegment = new TextSegment();
@@ -417,6 +428,7 @@ namespace Html2Pdf.PCreator
                 }
                 
             }
+            // New Line element <br />
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.br)
             {
                 /*
@@ -429,36 +441,38 @@ namespace Html2Pdf.PCreator
                 pdfNewLine = new TextSegment();
                 pdfNewLine.Text = Environment.NewLine;
             }
+            // Hyperlink element <a>
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.a)
             {
                 PUtil.TextStateUtil.TextState_ModifyForHyperlink(parentTextState);
                 PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
             }
+            // Bold text element <b>
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.b)
             {
                 PUtil.TextStateUtil.TextState_ModifyForBold(parentTextState);
                 PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
             }
+            // Italic text element <i>
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.i)
             {
                 PUtil.TextStateUtil.TextState_ModifyForItalic(parentTextState);
                 PUtil.TextStateUtil.TextState_ModifyFromHStyles((node as HNodeTag).Styles, parentTextState);
             }
-            
+            // Image element <img>
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.img)
             {
                 pdfImage = getImage(node as HNodeTag);
             }
-            
+            // Form field element <input>
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.input)
             {
                 pdfFormField = getFormField(node as HNodeTag);
             }
+            // Button element <button>
             if ((node is HNodeTag) && (node as HNodeTag).TagType == HTagType.button)
             {
-                textSegment = new TextSegment();
-                textSegment.TextState = parentTextState;
-                textSegment.Text = "BUTTON HERE";
+                pdfFormField = getFormFieldButton(node as HNodeTag);
             }
 
             // TODO - other inline tags
@@ -603,7 +617,7 @@ namespace Html2Pdf.PCreator
                 {
                     textBoxField.Value = value;
                 }
-                //Так делать ни в коем случае нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
+                //Так делать нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
                 //textBoxField.Value = "";
                 
                 //Border border = new Border(field);
@@ -625,7 +639,7 @@ namespace Html2Pdf.PCreator
                 string name = inputNode.GetAttribute("name", "checkbox_field");
                 checkBoxField.PartialName = name;
 
-                //Так делать ни в коем случае нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
+                //Так делать нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
                 //checkBoxField.Checked = true;
 
                 return checkBoxField;
@@ -641,7 +655,7 @@ namespace Html2Pdf.PCreator
                 opt.Width = 12;
                 opt.Height = 12;
 
-                //Так делать ни в коем случае нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
+                //Так делать нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
                 //opt.Border = new Border(opt);
                 //opt.Border.Width = 1;
                 //opt.Border.Style = BorderStyle.Solid;
@@ -676,7 +690,37 @@ namespace Html2Pdf.PCreator
 
 
 
+        private Aspose.Pdf.Forms.Field getFormFieldButton(HNodeTag buttonNode)
+        {
+            Aspose.Pdf.Forms.Field field = null;
+            string value = "";
 
+            if ((buttonNode is HNodeContainer) && (buttonNode as HNodeContainer).ChildNodes.Count > 0)
+            {
+                if ((buttonNode as HNodeContainer).ChildNodes[0] is HNodeText)
+                {
+                    value = ((buttonNode as HNodeContainer).ChildNodes[0] as HNodeText).Text;
+                }
+            }
+
+            field = getFormField_Button();
+            return field;
+
+            Aspose.Pdf.Forms.Field getFormField_Button()
+            {
+                ButtonField buttonField = new ButtonField();
+
+                buttonField.Height = 18;
+                buttonField.Width = 12 + 6 * value.Length;
+
+                if (!String.IsNullOrEmpty(value))
+                {
+                    buttonField.Value = value;
+                }
+
+                return buttonField;
+            }
+        }
 
 
 
@@ -691,9 +735,8 @@ namespace Html2Pdf.PCreator
 
 
         //
-        //
-        // DEBUG BLOCK (start)
-        //
+        // Debug methods
+        // for testing functionality Aspose.PDF
         //
 
         public void PDocument_debug(string fileFullName, HDocument hDocument)
@@ -973,9 +1016,9 @@ namespace Html2Pdf.PCreator
         }
 
         //
-        //
-        // DEBUG BLOCK (end)
-        //
+        // Debug methods
+        // for testing functionality Aspose.PDF
+        // (end)
         //
     }
 }

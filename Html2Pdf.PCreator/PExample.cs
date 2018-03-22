@@ -13,6 +13,10 @@ namespace Html2Pdf.PCreator
 {
     public static class PExample
     {
+        //
+        // Debug methods
+        // for testing functionality Aspose.PDF
+        //
 
 
         public static void Form1(Document pdfDocument)
