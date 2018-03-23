@@ -617,7 +617,7 @@ namespace Html2Pdf.PCreator
                 {
                     textBoxField.Value = value;
                 }
-                //Так делать нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
+                //Так делать нельзя, падает исключение при pdfDocument.ProcessParagraphs();
                 //textBoxField.Value = "";
                 
                 //Border border = new Border(field);
@@ -639,7 +639,7 @@ namespace Html2Pdf.PCreator
                 string name = inputNode.GetAttribute("name", "checkbox_field");
                 checkBoxField.PartialName = name;
 
-                //Так делать нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
+                //Так делать нельзя, падает исключение при pdfDocument.ProcessParagraphs();
                 //checkBoxField.Checked = true;
 
                 return checkBoxField;
@@ -655,7 +655,7 @@ namespace Html2Pdf.PCreator
                 opt.Width = 12;
                 opt.Height = 12;
 
-                //Так делать нельзя, почемуто падает исключение при pdfDocument.ProcessParagraphs();
+                //Так делать нельзя, падает исключение при pdfDocument.ProcessParagraphs();
                 //opt.Border = new Border(opt);
                 //opt.Border.Width = 1;
                 //opt.Border.Style = BorderStyle.Solid;

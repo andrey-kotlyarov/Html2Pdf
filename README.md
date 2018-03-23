@@ -39,13 +39,14 @@ List of supported tags:
 * p
 * div
 * span
-* br (in development)
+* br
 * b
 * i
 * a
 * img
 * form
 * input
+* button
 
 List of supported style properties:
 * color
